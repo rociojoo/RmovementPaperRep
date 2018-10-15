@@ -1,0 +1,118 @@
+---
+title: "Survey on the R packages"
+author: "Rocio Joo"
+date: "October 14, 2018"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Survey Questions
+
+The purpose of this anonymous survey was an assessment about the current state of the art of movement-related R packages about three aspects:
+
+    1. How popular those packages are; 
+    2. How well documented they are; 
+    3. How relevant they are for users. 
+
+The survey got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
+
+Since the only question analyzed for the purpose of this review concerns package documentation, we only detail that question here. 
+
+<!-- In the next sections, I describe the questions in the survey. -->
+
+<!-- ### Package usage -->
+
+<!-- A list of packages, containing all of the packages in this review except trajr, which was added later to the review, was provided. Participants had to answer: -->
+
+<!-- How often do you use each of these packages? 1) Never, 2) rarely, 3) sometimes, 4) often. -->
+
+<!-- Based on the answers of this question, for the next two questions, only the packages that participants marked options different than 'never' were shown.  -->
+
+### Package documentation 
+
+How helpful is the documentation provided for each of the packages you've used for your work? Documentation includes what is contained in the manual and help pages, vignettes, published manuscripts, and other material about the package provided by the authors.
+Please answer using one of the following options:
+
+    • Not enough: It's not enough to let me know how to do what I need; 
+    • Basic: It's enough to let me get started with simple use of the functions but not to go 
+      further (e.g. use all arguments in the functions, or put extra variables); 
+    • Good: I did everything I wanted and needed to do with it; 
+    • Excellent: I ended up doing even more than what I planned because of the excellent 
+      information in the documentation. 
+    • Don't remember: I honestly can't remember… 
+
+<!-- ### Package relevance  -->
+
+<!-- How relevant is each of the packages you've used for your work? -->
+<!-- Please answer using one of the following options: -->
+
+<!--     • Not relevant: I tried the package but really didn't find it a good use for my work;  -->
+<!--     • Slightly relevant: It helps in my work, but not for the core of it;  -->
+<!--     • Important: It's important for the core of my work, but if it didn't exist, there are  -->
+<!--       other packages or solutions to obtain something similar;  -->
+<!--     • Essential: I wouldn't have done the key part of my work without this package. -->
+
+<!-- ### User profile  -->
+
+<!-- What kind of R user do you consider yourself? -->
+
+<!-- Choose one of the following answers -->
+
+<!--     • Beginner: You only use existing packages and occasionally write some lines of code.  -->
+<!--     • Intermediate: You use existing packages but you also write and optimize your own functions.  -->
+<!--     • Advanced: You commonly use version control or contribute to develop packages. -->
+
+## Survey representativity 
+
+There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, email lists and the mablab website: \url{http://matlab.org}. We analyzed only completed surveys (all questions answered); 225 participants completed the survey.
+
+To get an idea of how representative the survey was of the population of R-tracking-packages users, we compared the number of participants that used each package to the number of monthly downloads that each package has. 
+<!-- If the number of users based on the survey is proportional to the number of downloads, we could assume that the sample is representative. -->
+
+The number of downloads were calculated using the R package cran.stats. It calculates the number of independent downloads by each package (substracting downloads by dependencies) by day. It only works for downloads using Rstudio, and for packages on CRAN. So for the tracking packages on CRAN, we computed the average of downloads per month, from September 2017 to August 2018; less months were considered for packages that were less than one year old. 
+
+There is no perfect match between the number of users and the number of downloads per package, but a correlation 0.88 for the 42 packages on CRAN, provides evidence of a good representativity of the users of tracking packages in the survey. A log-log plot for both metrics is shown in the figure below.  
+
+
+```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(ggrepel)
+path_data <- paste0('../Data/')
+matrix_all <- read.csv(paste0(path_data,"Survey_Processed_Summary.csv"))
+names(matrix_all) <- c("package",names(matrix_all)[2:ncol(matrix_all)])
+funciones <- read.csv(paste0(path_data,"packages_newlist_20181007_help.csv"))
+matrix_fun <- left_join(matrix_all,funciones)
+matrix_fun <- matrix_fun[!is.na(matrix_fun$Number_Functions),]
+# discarding the packages we did not get users from:
+matrix_fun_2 <- matrix_fun[matrix_fun$Use_Counts > 0,] # missing: "feedR"            "GGIR"             "nparACT"          "PhysicalActivity" "smam"            
+matrix_fun_3 <- matrix_fun[matrix_fun$Use_Counts >= 10,] 
+theme1<-function() {theme(text = element_text(size=10),axis.text.x = element_text(angle=0, hjust=0),legend.position = "none")}
+ggplot(matrix_fun_2,aes(x=Use_Counts, y=Downloads)) + 
+  geom_point(size=2) +
+  xlab('Package Use Count') + ylab("Downloads") +
+  geom_text_repel(label=matrix_fun_2$package,  segment.size=0.6,force=3,segment.alpha=.25,hjust=0,box.padding=0.5,min.segment.length=.1,size=2.7, direction = "both") +
+  scale_x_continuous(trans='log10')+
+  scale_y_continuous(trans='log10') + theme_classic() + theme1()
+# cor(matrix_fun_2$Use_Counts,matrix_fun_2$Downloads,use="pairwise.complete.obs")
+```
+
+## Survey analysis
+
+For this work, we only analyzed the question about package documentation; only responses of participants who remembered the documentation were considered in the analysis. 
+
+We counted the number of participants who expressed that the documentation was either good or excellent, and divided by the total of answers on documentation given about the package. The packages that had more than $0.75$ (or $75\%$) and at least 10 respondents, were considered to have "great documentation". 
+
+## Summarized results
+
+Here are the results of the survey regarding documentation as well as the count of participants that use each package.
+
+```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
+library(knitr)
+matrix_all$Great_Doc <- round((matrix_all$Good + matrix_all$Excellent)/(matrix_all$Not.enough + matrix_all$Basic + matrix_all$Good + matrix_all$Excellent),2)
+# print(matrix_all)
+kable(matrix_all)
+```
