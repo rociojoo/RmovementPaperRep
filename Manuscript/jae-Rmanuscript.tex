@@ -47,7 +47,7 @@
 \newpage
 
 
-\section*{General Introduction}
+\section*{A Movement Ecology workflow}
 %
 %1. Researchers need to study movement
 %2. A systematic way to observe movement is with biologging devices that sample them.
@@ -63,24 +63,30 @@
 %11. Finally, recommendations. 
 
 
-Animal movement plays a crucial role in ecological and evolutionary processes, from the individual to ecosystem level \textcolor{red}{(Nathan et al. 2008, Kays et al. 2015, other refs)}. However, studying animal movement has presented challenges to researchers, as individuals are often difficult to follow for extended time periods and over large distances. Over recent decades, decreases in the size and cost of animal-borne sensors or biologging devices have led to an exponential increase in their use. This has substantially improved our understanding of how and why animals move \textcolor{red}{(Nathan et al. 2008, other refs)}. Technological advancements have also enabled a wide range of sensors to be used by ecologists, which can be integrated to remotely record a suite of metrics, including x, y and z (i.e. altitude or depth) locations, acceleration, prey capture attempts, as well as in-situ environmental conditions \textcolor{red}{(refs)}. From these multiple sensors, fine-scale behaviors and physiological states can be inferred \textcolor{red}{(Wilmers et al. 2015, other refs)}. 
+Animal movement plays a crucial role in ecological and evolutionary processes, from the individual to ecosystem level \textcolor{red}{(Nathan et al. 2008, Kays et al. 2015, other refs)}. Over recent decades, decreases in the size and cost of animal-borne sensors or biologging devices have led to the rise of the field of Movement Ecology, why investigates how and why animals move \textcolor{red}{(Nathan et al. 2008, other refs)}. A wide range of sensors have been developed for ecological studies, which can be integrated to remotely record a suite of metrics, including an animal's location (longitude, latitude, altitude/dept), acceleration, prey capture attempts, %MB: What do you mean by prey capture attempts?
+as well as in-situ environmental conditions \textcolor{red}{(Cagnacci et al. 2010, other refs)}.
+%MB: Cagnacci, F., Boitani, L., Powell, R. A., & Boyce, M. S. (2010). Animal ecology meets GPS-based radiotelemetry: a perfect storm of opportunities and challenges. Philosophical Transactions of the Royal Society of London, Series B: Biological Sciences, 365, 2157–2162. http://dx.doi.org/10.1098/rstb.2010.0107 [Make sure to read that one!]
+From these multiple sensors, fine-scale behaviors and physiological states can be inferred \textcolor{red}{(Wilmers et al. 2015, other refs)}. In parallel, this wealth of data and methods has led to the development of tools to process and analyze data, and implement methods. Arguably, the most dynamic platform in the field of Movement Ecology have been the R environment for statistical computing and its ecosystem of packages. %MB: Maybe cite R itself here? I'm not sure…
+The aim of this study is thus to review available packages to investigate movement ecology within the R platform. % I think it's here where I should explain which packages. 
 
-The increase in quantity and complexity of biologging data requires appropriate analytical and software tools that aid processing and interpretation of data. Those tools should be standardized to allow for reproducibility of results and computation time optimization \textcolor{red}{(Reichman et al. 2011, Stewart Lowndes et al. 2017)}. Mainly in the last decade, many of these tools have been made available for the scientific community in the form of R packages, which has facilitate their widespread use \textcolor{red}{(refs)}. Nonetheless, many packages have been made in isolation, and there is no formal appraisal and comparison of the tools provided by the packages. This limits their use as researchers are required to review each package to identify, within a package, the most appropriate function for their analysis, and between packages with similar objectives, the most appropriate package for their analysis. 
-      
-The aim of this study is to review the available packages within the R platform, for movement ecology. % I think it's here where I should explain which packages. 
-Movement of an organism is defined as a change in the spatial location of an individual in time, so movement data is defined by a space and a time component. For the purpose of this review, we focus on a specific type of movement data: tracking data; i.e. data composed by at least 2-dimensional coordinates $(x,y)$ and a time index $(t)$, and can be seen as the geometric representation (the trajectory) of an individual's path. Since most movement data is collected using tagging devices, some R packages focus on extracting or analyzing data from these devices, dealing with the limitations related to the device they focus on; for instance, some packages provide tools for extracting locations from the light level information collected with Global Location Sensors (GLS). Some other packages have been created to process or analyze any dataset in a tracking data format (x,y,t) regardless of the way the data was collected. All of these packages, that are either for transforming data into a tracking format or to analyze tracking data, are reviewed here and will be henceforth called tracking packages. To our knowledge, there are \textcolor{blue}{$57$} of them. 
-
-The next section will summarize the packages by stage of data processing and analysis (Fig. \ref{fig:DataProcess}). In some cases, biologging devices do not provide raw data in the form of tracking data, e.g. for GLS loggers, for the most part just light intensity is provided. The process by which data is transformed into the (x,y,t) format we refer to as pre-processing. After this, the data may not be immediately usable, e.g. errors or outliers need to be identified, or other second or third order variables need to be derived for the dataset to be ready for analysis; we defined this type of data processing as post-processing. We divide any further analyses into data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others (e.g. population parameter estimation, interaction between individuals). In each of these subsections, we describe the tools provided by tracking packages to achieve these goals. An additional subsection will briefly describe some R packages that did not deal with tracking data (as defined above), but were developed to process and analyze data from biologging devices such as accelerometers and time-depth recorders. 
+Movement of an organism is defined as a change in the spatial location of an individual in time---in others words, movement inherently embeds a space and a time component. For the purpose of this review, we define \emph{tracking data} to formally represent movement, as data composed by at least 2-dimensional coordinates $(x,y)$ (or $(x,y,z)$) and a time index $(t)$, i.e. the geometric representation (the trajectory) of an individual's path \textcolor{red}{(Cagnacci et al. 2010)}. We propose a full Movement Ecology workflow dedicated to the study of tracking data (Fig.~\ref{fig:DataProcess}), composed of three essential stages: pre-processing, processing and analysis of tracking data. In some cases, biologging devices do not provide raw data in the form of tracking data, e.g.  Global Location Sensors (GLS) loggers, for the most part, just provide light intensity that can be used to extract location. The process by which data is transformed into the $(x,y,t)$ format we refer to as \emph{pre-processing}. Tracking data may not be immediately usable, e.g. errors or outliers need to be identified, or other second- or third-order variables need to be derived for the dataset to be ready for analysis; we defined this stage of data processing as \emph{post-processing}. Finally, the last stage of \emph{analysis} can be divided into data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others (e.g. population parameter estimation, interaction between individuals).
 
 \begin{figure}
-	\centering
-	\includegraphics[width=0.75\textwidth]{./mes_images/process-sketch-3.pdf}
-	\caption{\label{fig:DataProcess} Stages of data processing and analysis.}
+        \centering
+        \includegraphics[width=0.75\textwidth]{./mes_images/process-sketch-3.pdf}
+        \caption{\label{fig:DataProcess} Stages of data processing and analysis.}
 \end{figure} 
 
-Since the documentation provided in conjunction with the packages are key for rendering them accessible, we also review this supporting documentation and, based on a survey, show how useful these documents are to package users. The links between packages, showing how much they rely on each other and the compatibility between them are also assessed. 
+The increase in quantity and complexity of biologging data requires appropriate analytical and software tools that aid processing and interpretation of data. Those tools should be standardized to allow for reproducibility of results and computation time optimization \textcolor{red}{(Urbano et al. 2009, Reichman et al. 2011, Stewart Lowndes et al. 2017)}. %MB: Urbano, F., Cagnacci, F., Calenge, Cl\'ement, Dettki, H., Cameron, A., & Neteler, M. (2010). Wildlife tracking data management: a new vision. Philosophical Transactions of the Royal Society of London, Series B: Biological Sciences, 365, 2177–2185. http://dx.doi.org/10.1098/rstb.2010.0081
+Mainly in the last decade, many of these tools have been made available for the scientific community in the form of R packages, which has facilitate their widespread use \textcolor{red}{(refs)}. Nonetheless, many packages have been made in isolation, and there is no formal appraisal and comparison of the tools provided by the packages. This limits their use as researchers are required to review each package to identify, within a package, the most appropriate function for their analysis, and between packages with similar objectives, the most appropriate package for their analysis. 
 
-This review is aimed at both users and developers of tracking packages, since any user can potentially become a developer at a given time, and any developer can use other packages. This work is a step forward for a complete knowledge on the existing tracking packages; for users, offering criteria to select packages to perform movement ecology analysis, and for developers, discussing issues that could help maximize the usefulness of individual packages and strengthen the links between the community. 
+To our knowledge, there are \textcolor{blue}{$57$} \emph{tracking packages}, i.e. packages that deal with tracking data (list compiled on XX-XX-2018). The next section will summarize the packages by stage of data processing and analysis (Fig.~\ref{fig:DataProcess}). Since most movement data is collected using tagging devices, some R packages focus on extracting or analyzing data from these devices, dealing with the limitations related to the device they focus on. Some other packages have been created to process or analyze any dataset in a tracking data format $(x,y,t)$ regardless of the way the data was collected.  %MB: You need to make sure in this paragraph that it is not about packages doing this or that, but that you're talking about 'aims' or 'goals' of a package, since packages can have several (and hence fall in several categories in the classification).
+We will also briefly describe some R packages that did not deal with tracking data as defined above, but that were developed to process and analyze data from biologging devices related to movement, such as accelerometers and time-depth recorders. 
+
+Since the documentation provided in conjunction with the packages are key for rendering them accessible, we also review supporting documentation and, based on a survey, show how useful these documents are to package users. The links between packages, showing how much they rely on each other and the compatibility between them are also assessed. 
+
+This review is aimed at Movement Ecology scientists, whether they are potential users or developers of tracking packages, since any user can potentially become a developer at a given time, and any developer can use other packages. This work is a step forward to a complete %MB: better?
+knowledge on existing tracking packages; for users, offering selection criteria to study movement ecology using the R platform, and for developers, discussing issues that could help maximize usefulness of individual packages and strengthen the links within the community. 
 
 
 \section*{Data processing, analysis and the R packages}
@@ -90,34 +96,34 @@ Multiple sources were used to identify the tracking packages (as defined in the 
 \textcolor{blue}{Fifty seven} packages assist with processing and analysis of tracking data (Fig. \ref{fig:DataProcess}). Some R packages have been developed to tackle several of these stages of data processing and analysis, while others focus on only one. The number of packages regarding each type of processing/analysis is showed in Table \ref{table:PurposeTable}. When appropriate, the type of biologging devices from which the tracking data originates will be described, so that readers that are not familiar with these devices have a basic idea of the advantages and limitations of the devices, and why some packages need to focus on specific issues related to them. 
 %
 \begin{table}[ht]
-	\centering
-	\begin{tabular}{lr}
-		\hline
-		Type of processing/analysis & Count \\ 
-		\hline
-		Pre-processing & 9 \\
-		Post-processing & 17 \\
-		Visualization* & 2 \\ 
-		Track description & 5 \\ 
-		Path reconstruction  & 8 \\ 
-		Behavioral patterns identification & 9 \\ 
-		Space use & 17 \\ 
-		Trajectory simulation & 10 \\ 
-		Others & 8 \\ 
-		\hline
-		Total & 57 \\
-		\hline
-	\end{tabular}
-	\caption{\label{table:PurposeTable} Number of packages dealing with each type of data processing and analysis. Some packages may correspond to more than one category, except for data visualization (*), where only packages created for that purpose are counted.}
+        \centering
+        \begin{tabular}{lr}
+                \hline
+                Type of processing/analysis & Count \\ 
+                \hline
+                Pre-processing & 9 \\
+                Post-processing & 17 \\
+                Visualization* & 2 \\ 
+                Track description & 5 \\ 
+                Path reconstruction  & 8 \\ 
+                Behavioral patterns identification & 9 \\ 
+                Space use & 17 \\ 
+                Trajectory simulation & 10 \\ 
+                Others & 8 \\ 
+                \hline
+                Total & 57 \\
+                \hline
+        \end{tabular}
+        \caption{\label{table:PurposeTable} Number of packages dealing with each type of data processing and analysis. Some packages may correspond to more than one category, except for data visualization (*), where only packages created for that purpose are counted.}
 \end{table}
 
 The description of packages in this section %(henceforth called `movement packages') 
 will also include information on the year each package was publicly available (Fig.\ref{fig:PkgYear}), the main repository where the package is stored and whether it is actively maintained (hereafter referred to as `active'). The official repository for R packages is the Comprehensive R Archive Network (CRAN) repository. CRAN enforces technical consistency, with a set of rules such as the inclusion of ownership information, cross-platform portable code (i.e. to work with Windows, Mac OS and UNIX platforms), minimum and maximum sizes for package components, among others. The great majority of the reviewed packages are on CRAN; the ones that are not on CRAN are mostly on GitHub and a few others are in other repositories (e.g. r-forge or independent websites). Regarding package maintenance, we consider that a GitHub package is actively maintained if a `commit' has been made in the last year, and for the others (if they are not also on GitHub), that the most recent version of the package is no older than one year (analysis conducted in August 2018). Links to each package repository along with a summary of their main characteristics are included in \textcolor{blue}{Supplementary File 1}. 
 
 \begin{figure}
-	\centering
-	\includegraphics[width=0.75\textwidth]{./mes_images/packages_per_year.pdf}
-	\caption{\label{fig:PkgYear} Number of packages per year of publication (assessment performed in August 2018).}
+        \centering
+        \includegraphics[width=0.75\textwidth]{./mes_images/packages_per_year.pdf}
+        \caption{\label{fig:PkgYear} Number of packages per year of publication (assessment performed in August 2018).}
 \end{figure} 
 
 \subsection*{Pre-processing} 
@@ -125,21 +131,21 @@ will also include information on the year each package was publicly available (F
 When raw biologging data are not in a tracking data format, some pre-processing is required. The methods used for pre-processing depend heavily on the type of biologging device used. Among the tracking packages, \textcolor{blue}{6} are focused on global location sensors (GLS), one on radio telemetry, one uses accelerometry and magnetometry, and another one uses GPS data in addition to accelerometry and magnetometry data. %We will briefly describe the characteristics and challenges of data processing for each type of device and how each package tackles these challenges. % (Table \ref{table:PreDevicesTable}). 
 %
 %\begin{table}[ht]
-%	\centering
-%	\begin{tabular}{lr}
-%		\hline
-%		Type of device & Count \\ 
-%		\hline
-%		GLS & 6 \\ 
-%		Radio & 1 \\ 
-%		Acoustic & 1 \\ 
-%%		Not biologging & 2 \\
-%		Accelerometry, magnetometry and others & 2 \\ 
-%		\hline
-%		 Total & 11 \\
-%		   \hline
-%	\end{tabular}
-%	\caption{\label{table:PreDevicesTable} Number of packages created for data pre-processing from each type of device.}
+%       \centering
+%       \begin{tabular}{lr}
+%               \hline
+%               Type of device & Count \\ 
+%               \hline
+%               GLS & 6 \\ 
+%               Radio & 1 \\ 
+%               Acoustic & 1 \\ 
+%%              Not biologging & 2 \\
+%               Accelerometry, magnetometry and others & 2 \\ 
+%               \hline
+%                Total & 11 \\
+%                  \hline
+%       \end{tabular}
+%       \caption{\label{table:PreDevicesTable} Number of packages created for data pre-processing from each type of device.}
 %\end{table}
 
 \subsubsection*{GLS data pre-processing} 
@@ -147,10 +153,10 @@ When raw biologging data are not in a tracking data format, some pre-processing 
 GLS are electronic archival tracking devices which record ambient light intensity and elapsed time. The timings of sunset and sunrise are estimated, and latitude is calculated from day length, and longitude from the time of local midday relative to Greenwich Mean time \citep{Afanasyev2004}. GLS can record data for several years and their small size and low mass (<1 g) make them suitable for studying long-distance movements in a wide range of species. Several methodologies have been developed to reduce errors in geographic locations generated from the light data, which is reflected by the large number of packages for pre-processing GLS data. We classified these methods in three categories: threshold, template-fitting and twilight-free.
 
 \begin{itemize}
-	\item Threshold methods. Arbitrary threshold levels of solar irradiance are fixed to identify the timing of sunrise and sunset. The packages that use threshold methods are \Rpkg{GeoLight} (2012, CRAN, inactive) and \Rpkg{probGLS} (2016, GitHub, inactive). \Rpkg{GeoLight} uses astronomical equations from \cite{Montenbruck2013} to calculate locations from timings of sunrise and sunset, and from sun elevation angles. \Rpkg{probGLS} implements a probabilistic method that takes into account uncertainty in sun elevation angle and twilight events to estimate locations. Starting with the first known location (where the individual was tagged), it estimates the location of the subsequent twilight event which is replicated several times adding an error term, repeating this process for the whole data series; it then computes probabilities for each location based on the plausibility of the estimated speed or on environmental conditions (e.g. sea surface temperature or SST) \citep{Merkel2016}. 
-	\item Template-fitting methods. The observed light irradiance levels for each twilight are modeled in function of theoretical light levels (i.e. the template). Then, parameters from the model (e.g. a slope in a linear regression) are used for estimating the locations. The formulation of the model and the parameters used for location estimation vary from method to method \citep{Ekstrom2004}. The packages that use template-fitting methods are \Rpkg{FLightR} (2015, CRAN, active), \Rpkg{TripEstimation} (2007, GitHub, inactive) and \Rpkg{trackit} (2012, GitHub, active). \Rpkg{FLightR} was particularly developed for bird movement. In its state-space modeling framework \citep{Patterson2008}, the locations are hidden states and the observation model is a physical model of light level changes as a function of position and time. A detailed description of the model and the package functions can be found in \cite{Rakhimberdiev2015} and \cite{Rakhimberdiev2017}, respectively. \Rpkg{trackit} was developed mainly for fish movement. Light intensity around sunrise and sunset are used as inputs in a state-space model that includes solar altitude and SST as covariates \citep{Lam2010}. \Rpkg{TripEstimation} was developed for marine organisms. It uses a Bayesian approach modeling light level as a function of sun elevation at each plausible location, prior knowledge of the animal's movement, and complementary environmental information (e.g. SST, depth of the water column) \citep{Sumner2009}. The package is still available on CRAN, but in its GitHub repository it is indicated that the package was deprecated for \Rpkg{SGAT} (the authors of \Rpkg{TripEstimation} are main authors of \Rpkg{SGAT} and \Rpkg{GeoLight}). \Rpkg{SGAT} contains functions to implement both threshold and template-fitting methods. As one has been deprecated by the other, we consider both packages as one \Rpkg{TripEstimation/SGAT}. As auxiliary packages, \Rpkg{TwGeos} and \Rpkg{BAStag} contain functions to process GLS data such as detecting the timing of twilight periods from light data. The estimated twilight periods can be later used as inputs in the above mentioned packages for location estimation.
-	\item Twilight-free methods. It is possible to estimate locations without depending on twilight event identification. %to estimate locations. The packages that fall in this category are \Rpkg{TwilightFree} (2017, GitHub, active), \Rpkg{HMMoce} (2017, CRAN, active). 
-	\Rpkg{TwilightFree} (2017, GitHub, active) uses a Hidden Markov Model (HMM) where the hidden states are the daily geographic locations (the spatial domain is discretized as gridded cells) and the observed variable is the observed pattern of light and dark over the day \citep{Bindoff2017}. SST and land/sea marks can be used as covariates. Parameter estimation is performed using functions from the SGAT package. %\Rpkg{HMMoce} is particularly adapted to fish movement and aims at improving location estimation, which implies that locations have been previously obtained by any method (e.g. a GLS provider, or a threshold method) \citep{Braun2017}. It estimates locations via HMMs where the location data are discretized as in \Rpkg{TwilightFree}, and depth-temperature profiles and SST are used as covariates in the observed model. 
+        \item Threshold methods. Arbitrary threshold levels of solar irradiance are fixed to identify the timing of sunrise and sunset. The packages that use threshold methods are \Rpkg{GeoLight} (2012, CRAN, inactive) and \Rpkg{probGLS} (2016, GitHub, inactive). \Rpkg{GeoLight} uses astronomical equations from \cite{Montenbruck2013} to calculate locations from timings of sunrise and sunset, and from sun elevation angles. \Rpkg{probGLS} implements a probabilistic method that takes into account uncertainty in sun elevation angle and twilight events to estimate locations. Starting with the first known location (where the individual was tagged), it estimates the location of the subsequent twilight event which is replicated several times adding an error term, repeating this process for the whole data series; it then computes probabilities for each location based on the plausibility of the estimated speed or on environmental conditions (e.g. sea surface temperature or SST) \citep{Merkel2016}. 
+        \item Template-fitting methods. The observed light irradiance levels for each twilight are modeled in function of theoretical light levels (i.e. the template). Then, parameters from the model (e.g. a slope in a linear regression) are used for estimating the locations. The formulation of the model and the parameters used for location estimation vary from method to method \citep{Ekstrom2004}. The packages that use template-fitting methods are \Rpkg{FLightR} (2015, CRAN, active), \Rpkg{TripEstimation} (2007, GitHub, inactive) and \Rpkg{trackit} (2012, GitHub, active). \Rpkg{FLightR} was particularly developed for bird movement. In its state-space modeling framework \citep{Patterson2008}, the locations are hidden states and the observation model is a physical model of light level changes as a function of position and time. A detailed description of the model and the package functions can be found in \cite{Rakhimberdiev2015} and \cite{Rakhimberdiev2017}, respectively. \Rpkg{trackit} was developed mainly for fish movement. Light intensity around sunrise and sunset are used as inputs in a state-space model that includes solar altitude and SST as covariates \citep{Lam2010}. \Rpkg{TripEstimation} was developed for marine organisms. It uses a Bayesian approach modeling light level as a function of sun elevation at each plausible location, prior knowledge of the animal's movement, and complementary environmental information (e.g. SST, depth of the water column) \citep{Sumner2009}. The package is still available on CRAN, but in its GitHub repository it is indicated that the package was deprecated for \Rpkg{SGAT} (the authors of \Rpkg{TripEstimation} are main authors of \Rpkg{SGAT} and \Rpkg{GeoLight}). \Rpkg{SGAT} contains functions to implement both threshold and template-fitting methods. As one has been deprecated by the other, we consider both packages as one \Rpkg{TripEstimation/SGAT}. As auxiliary packages, \Rpkg{TwGeos} and \Rpkg{BAStag} contain functions to process GLS data such as detecting the timing of twilight periods from light data. The estimated twilight periods can be later used as inputs in the above mentioned packages for location estimation.
+        \item Twilight-free methods. It is possible to estimate locations without depending on twilight event identification. %to estimate locations. The packages that fall in this category are \Rpkg{TwilightFree} (2017, GitHub, active), \Rpkg{HMMoce} (2017, CRAN, active). 
+        \Rpkg{TwilightFree} (2017, GitHub, active) uses a Hidden Markov Model (HMM) where the hidden states are the daily geographic locations (the spatial domain is discretized as gridded cells) and the observed variable is the observed pattern of light and dark over the day \citep{Bindoff2017}. SST and land/sea marks can be used as covariates. Parameter estimation is performed using functions from the SGAT package. %\Rpkg{HMMoce} is particularly adapted to fish movement and aims at improving location estimation, which implies that locations have been previously obtained by any method (e.g. a GLS provider, or a threshold method) \citep{Braun2017}. It estimates locations via HMMs where the location data are discretized as in \Rpkg{TwilightFree}, and depth-temperature profiles and SST are used as covariates in the observed model. 
 \end{itemize}
 
 %\Rpkg{TwGeos} and \Rpkg{BAStag} contain functions to process GLS data such as importing, plotting data and detecting the timing of twilight periods from light data. Depending on the method chosen to estimate locations, those twilight events may be needed. Both  \Rpkg{TwGeos} and \Rpkg{BAStag} were created by the same authors. \Rpkg{BAStag} handles data from British Antarctic Survey (BAS, Cambridge, UK) archival tags, and \Rpkg{TwGeos} was defined by its authors as a `slightly simplified version of \Rpkg{BAStag} with some additional features' (e.g. outlier detection). For that reason, we consider both packages as one.
@@ -167,9 +173,9 @@ Radio tagging involves the attachment of a radio transmitter to an animal. The r
 %Three packages focus on radio telemetry for different purposes: \Rpkg{telemetr} (2012, GitHub, inactive) implements location estimation methods, \Rpkg{feedr} (2016, GitHub, active) involves pre-processing of data and obtaining summary statistics and \Rpkg{caribou} (2011, CRAN, inactive) estimates population size based on relocations. A fourth package, \Rpkg{sigloc}, was available on CRAN until June 2018, after which point it was removed.
 %
 %\begin{itemize}
-%	\item \Rpkg{telemetr} implements several triangulation methods as well as a maximum likelihood procedure to estimate locations from bearing data (triangulation information). Since there are no reference to the methods in the package documentation, it is aimed at users that are already familiar with the methods.
-%	\item \Rpkg{feedr} works with RFID. RFID use electromagnetic fields to automatically store information of identified animals using radio waves. Raw RFID data typically contains an individual line of data for each read event made by the RFID logger. \Rpkg{feedr} contains functions to read that data, clean it, and most of all, get summary statistics from the data such as number of visits of an animal to static logger stations  and simple movement patterns.
-%	\item \Rpkg{caribou} was specifically created to estimate population size from Caribou tracking data and will be described later in the tracking data section.
+%       \item \Rpkg{telemetr} implements several triangulation methods as well as a maximum likelihood procedure to estimate locations from bearing data (triangulation information). Since there are no reference to the methods in the package documentation, it is aimed at users that are already familiar with the methods.
+%       \item \Rpkg{feedr} works with RFID. RFID use electromagnetic fields to automatically store information of identified animals using radio waves. Raw RFID data typically contains an individual line of data for each read event made by the RFID logger. \Rpkg{feedr} contains functions to read that data, clean it, and most of all, get summary statistics from the data such as number of visits of an animal to static logger stations  and simple movement patterns.
+%       \item \Rpkg{caribou} was specifically created to estimate population size from Caribou tracking data and will be described later in the tracking data section.
 %\end{itemize}
 %
 %
@@ -279,11 +285,11 @@ Spatial ecology precedes movement ecology as a research field, which is why a ma
 Several packages allow the estimation of home ranges: \Rpkg{adehabitatHR} (2010, CRAN, active), \Rpkg{rhr}, \Rpkg{T-LoCoH}, \Rpkg{BBMM} (2010, CRAN, inactive), \Rpkg{mkde} (2014, CRAN, inactive), \Rpkg{MovementAnalysis} and \Rpkg{move}. They provide a variety of methods, from simple Minimum convex polygons (MCP) \citep{Mohr1947} to more complex probabilistic Utilization distributions (UD) \citep{VanWinkle1975}, potentially accounting for the temporal autocorrelation in tracking data, as detailed below.
 
 \begin{itemize}
-	\item \Rpkg{adehabitatHR} contains a comprehensive list of methods to estimate home ranges: convex hull methods like MCP, clustering techniques, Local convex hulls (LoCoH) \citep{Getz2007} and the characteristic hull method \cite{Downs2009}; UD methods like kernel home ranges, also with the modification from \cite{Benhamou2010} to account for boundaries, and methods to account for temporal autocorrelation between locations (Brownian bridge kernel method) \citep{Bullard1991}; biased random bridge kernel method also known as movement-based kernel estimation \citep{Benhamou2010, Benhamou2011}; and product-kernel algorithm, \cite{Horne2007}.
-	\item \Rpkg{rhr} \citep{Signer2015} provides a graphical user interface to estimate home ranges using several non-movement based methods, such as parametric home ranges, MCP, kernel UD, or local convex hulls, as well as the Brownian Bridge kernel method (as a wrapper to the \Rpkg{adehabitatHR} function). Complementary analyses include time to statistical independence, site fidelity test (against random permutation of step lengths and angles), among others.
-	\item \Rpkg{T-LoCoH} is focused on constructing home-range hulls \citep{Lyons2013}. A time-scale distance metric and a set of different nearest-neighbor criteria are available to choose which points to consider in a same hull. Hull metrics for space use, such as number of revisitations (repeated visits of an individual to the same hull) and their durations are also computed. Although the package was originally implemented for GPS data, it can be used for tracking data in general. 
-	\item \Rpkg{BBMM}, \Rpkg{MovementAnalysis} and \Rpkg{mkde} use Brownian bridge movement models to obtain UDs. \Rpkg{mkde} allows for a 3D extension of the Brownian bridges \citep{Tracey2014}.
-	\item \Rpkg{move}, in turn, calculates UDs of tracking data via dynamic Brownian Bridge modeling \citep{Kranstauber2012} or uses MCP for home range estimation; for the latter, it imports functions from \Rpkg{adehabitatHR}.
+        \item \Rpkg{adehabitatHR} contains a comprehensive list of methods to estimate home ranges: convex hull methods like MCP, clustering techniques, Local convex hulls (LoCoH) \citep{Getz2007} and the characteristic hull method \cite{Downs2009}; UD methods like kernel home ranges, also with the modification from \cite{Benhamou2010} to account for boundaries, and methods to account for temporal autocorrelation between locations (Brownian bridge kernel method) \citep{Bullard1991}; biased random bridge kernel method also known as movement-based kernel estimation \citep{Benhamou2010, Benhamou2011}; and product-kernel algorithm, \cite{Horne2007}.
+        \item \Rpkg{rhr} \citep{Signer2015} provides a graphical user interface to estimate home ranges using several non-movement based methods, such as parametric home ranges, MCP, kernel UD, or local convex hulls, as well as the Brownian Bridge kernel method (as a wrapper to the \Rpkg{adehabitatHR} function). Complementary analyses include time to statistical independence, site fidelity test (against random permutation of step lengths and angles), among others.
+        \item \Rpkg{T-LoCoH} is focused on constructing home-range hulls \citep{Lyons2013}. A time-scale distance metric and a set of different nearest-neighbor criteria are available to choose which points to consider in a same hull. Hull metrics for space use, such as number of revisitations (repeated visits of an individual to the same hull) and their durations are also computed. Although the package was originally implemented for GPS data, it can be used for tracking data in general. 
+        \item \Rpkg{BBMM}, \Rpkg{MovementAnalysis} and \Rpkg{mkde} use Brownian bridge movement models to obtain UDs. \Rpkg{mkde} allows for a 3D extension of the Brownian bridges \citep{Tracey2014}.
+        \item \Rpkg{move}, in turn, calculates UDs of tracking data via dynamic Brownian Bridge modeling \citep{Kranstauber2012} or uses MCP for home range estimation; for the latter, it imports functions from \Rpkg{adehabitatHR}.
 \end{itemize}
 
 \subsubsection*{Habitat use}
@@ -291,10 +297,10 @@ Several packages allow the estimation of home ranges: \Rpkg{adehabitatHR} (2010,
 The role of habitat features on animal space use, or habitat selection, can be investigated with any of the following four packages. 
 
 \begin{itemize}
-	\item \Rpkg{adehabitatHS} (2010, CRAN, active) provides several tools for exploratory habitat selection analysis, from simple univariate analyses, such as resource selection ratios \citep{Manly2007} or compositional analysis \citep{Aebischer1993}, to a family of multivariate analyses based on the geometric concept of ecological niche \citep{Hutchinson1957}, or the Outlying Mean Index (OMI) \citep{Doledec2000} and the K-select \citep{Calenge2005} at the individual level.
-	\item \Rpkg{hab} (2015, GitHub, inactive) enhances several utility functions of \Rpkg{adehabitatHS}, \Rpkg{adehabitatHR} and \Rpkg{adehabitatLT}, and provides core functions to prepare, fit and evaluate Step Selection Functions (SSFs) \citep{Fortin2005} while relying on \Rpkg{adehabitatLT} classes to handle trajectories. SSFs essentially investigate habitat selection along the trajectory, by comparing habitat features at observed step locations with those at alternative random steps taken from the same starting point \citep{Thurfjell2014}.
-	\item \Rpkg{amt} contains functions and wrappers to streamline the process of fitting SSFs from pairs of coordinates defining locations, to the conditional logistic regression model.
-	\item In \Rpkg{ctmcmove}, the role of habitat features is investigated through a generalized linear model framework, for which these features are rasterized, and the animal track is first imputed via functional movement modeling and then discretized in a grilled space (more details in \cite{Hanks2015}). 
+        \item \Rpkg{adehabitatHS} (2010, CRAN, active) provides several tools for exploratory habitat selection analysis, from simple univariate analyses, such as resource selection ratios \citep{Manly2007} or compositional analysis \citep{Aebischer1993}, to a family of multivariate analyses based on the geometric concept of ecological niche \citep{Hutchinson1957}, or the Outlying Mean Index (OMI) \citep{Doledec2000} and the K-select \citep{Calenge2005} at the individual level.
+        \item \Rpkg{hab} (2015, GitHub, inactive) enhances several utility functions of \Rpkg{adehabitatHS}, \Rpkg{adehabitatHR} and \Rpkg{adehabitatLT}, and provides core functions to prepare, fit and evaluate Step Selection Functions (SSFs) \citep{Fortin2005} while relying on \Rpkg{adehabitatLT} classes to handle trajectories. SSFs essentially investigate habitat selection along the trajectory, by comparing habitat features at observed step locations with those at alternative random steps taken from the same starting point \citep{Thurfjell2014}.
+        \item \Rpkg{amt} contains functions and wrappers to streamline the process of fitting SSFs from pairs of coordinates defining locations, to the conditional logistic regression model.
+        \item In \Rpkg{ctmcmove}, the role of habitat features is investigated through a generalized linear model framework, for which these features are rasterized, and the animal track is first imputed via functional movement modeling and then discretized in a grilled space (more details in \cite{Hanks2015}). 
 \end{itemize}
 
 \subsubsection*{Non-conventional approaches for space use}
@@ -302,20 +308,20 @@ The role of habitat features on animal space use, or habitat selection, can be i
 Other non-conventional approaches for investigating space use from tracking data can be found in \Rpkg{ctmm}, \Rpkg{moveNT} (2017, GitHub, active), \Rpkg{recurse} (2017, CRAN, active), \Rpkg{rsMove}, \Rpkg{feedr} and \Rpkg{VTrack}. 
 
 \begin{itemize}
-	\item \Rpkg{ctmm} fits several candidate movement models via a variogram regression approach \citep{Fleming2014}; those models can account for spatial autocorrelation in locations and periodicity in space use if required \citep{Peron2016}. Space utilization is computed via an autocorrelated kernel estimator, where the autocorrelation term comes from the movement model previously fitted \citep{Fleming2015}. 
-	\item \Rpkg{moveNT} tackles space use analysis via network graph theory \citep{Bastille2018}. We summarize the procedure here: 1) Tracking data is represented over a gridded map and the number of transitions between pixels are counted. 2) The adjacency matrix, i.e. the counts of transitions, are then used to compute some network metrics at the pixel level. 3) A Gaussian mixture model is fitted to one of the metrics (user choice) to cluster values in two groups potentially representing patches and interpatch movement.
-	\item \Rpkg{rsMove} implements a procedure to identify feeding sites from tracking data as a function of environmental variables (remote sensing data). It uses a random forest classification model; however, there is no information about how to fix the parameters of the model, so users should be careful when using this method. An application of the method can be found in \cite{Remelgado2017}, but the parametrization is not described in the manuscript.
-	\item \Rpkg{recurse} aims at computing number of revisitations to pre-defined areas and their duration. These areas can be defined by the user by entering their center of gravity (by default, the fixes in the track) and a radius. The vignette gives important criteria to use the functions and interpret the results, though there are no citations of scientific publications.
-	\Rpkg{feedr} and \Rpkg{VTrack}, for radio and acoustic telemetry data, respectively, provide statistics on animal visits to given logger stations/receivers. 
-	% * <basille@ufl.edu> 2018-09-11T14:14:38.538Z:
-	% 
-	% > The vignette gives important criteria to use the functions and interpret the results.
-	% No reference literature for this approach? Seems similar to residence time vs. time to return in Van Moorter et al. (2016), which is based on the idea of recursion.
-	% 
-	% - Van Moorter, B., Rolandsen, C. M., Basille, M., & Gaillard,
-	%   J. (2016). Movement is the glue connecting home ranges and habitat
-	%   selection. Journal of Animal Ecology, 85(1),
-	%   21–31. http://dx.doi.org/10.1111/1365-2656.12394
+        \item \Rpkg{ctmm} fits several candidate movement models via a variogram regression approach \citep{Fleming2014}; those models can account for spatial autocorrelation in locations and periodicity in space use if required \citep{Peron2016}. Space utilization is computed via an autocorrelated kernel estimator, where the autocorrelation term comes from the movement model previously fitted \citep{Fleming2015}. 
+        \item \Rpkg{moveNT} tackles space use analysis via network graph theory \citep{Bastille2018}. We summarize the procedure here: 1) Tracking data is represented over a gridded map and the number of transitions between pixels are counted. 2) The adjacency matrix, i.e. the counts of transitions, are then used to compute some network metrics at the pixel level. 3) A Gaussian mixture model is fitted to one of the metrics (user choice) to cluster values in two groups potentially representing patches and interpatch movement.
+        \item \Rpkg{rsMove} implements a procedure to identify feeding sites from tracking data as a function of environmental variables (remote sensing data). It uses a random forest classification model; however, there is no information about how to fix the parameters of the model, so users should be careful when using this method. An application of the method can be found in \cite{Remelgado2017}, but the parametrization is not described in the manuscript.
+        \item \Rpkg{recurse} aims at computing number of revisitations to pre-defined areas and their duration. These areas can be defined by the user by entering their center of gravity (by default, the fixes in the track) and a radius. The vignette gives important criteria to use the functions and interpret the results, though there are no citations of scientific publications.
+        \Rpkg{feedr} and \Rpkg{VTrack}, for radio and acoustic telemetry data, respectively, provide statistics on animal visits to given logger stations/receivers. 
+        % * <basille@ufl.edu> 2018-09-11T14:14:38.538Z:
+        % 
+        % > The vignette gives important criteria to use the functions and interpret the results.
+        % No reference literature for this approach? Seems similar to residence time vs. time to return in Van Moorter et al. (2016), which is based on the idea of recursion.
+        % 
+        % - Van Moorter, B., Rolandsen, C. M., Basille, M., & Gaillard,
+        %   J. (2016). Movement is the glue connecting home ranges and habitat
+        %   selection. Journal of Animal Ecology, 85(1),
+        %   21–31. http://dx.doi.org/10.1111/1365-2656.12394
 \end{itemize}
 
 \subsection*{Trajectory simulation} 
@@ -379,9 +385,9 @@ We identified \textcolor{blue}{12} packages (for which we had at least 10 respon
 Package developers could use the results of this survey (see \textcolor{blue}{Supplementary File 3} for more details) as a guidance to decide on whether to improve the documentation of their packages so more researchers can use them. 
 
 \begin{figure}
-	\centering
-	\includegraphics[width=1\textwidth]{./mes_images/doc_vs_participants_noleg.pdf}
-	\caption{\label{fig:DocParticipants} Packages with good and excellent documentation (survey results). x axis: Number of survey participants that used each package; y axis: percentage of users of each package that considered the documentation good or excellent. Text color in red corresponds to packages with standard documentation only, green is for packages with vignettes, and blue is for packages that also released other types of documentation.}
+        \centering
+        \includegraphics[width=1\textwidth]{./mes_images/doc_vs_participants_noleg.pdf}
+        \caption{\label{fig:DocParticipants} Packages with good and excellent documentation (survey results). x axis: Number of survey participants that used each package; y axis: percentage of users of each package that considered the documentation good or excellent. Text color in red corresponds to packages with standard documentation only, green is for packages with vignettes, and blue is for packages that also released other types of documentation.}
 \end{figure}
 
 %Due to large differences in the number of responses per package, and for some of packages, the high percentage of users who did not remember characteristics about the documentation, no statistical test was performed, since it could lead to spurious conclusions. We focused instead in the identification of `great-documentation' packages, for which more than $80\%$ of the respondents expressed that the documentation was either good (allowing the user to do everything they wanted and needed to do with the package) or excellent (allowing users to do even more than what they initially planned because of the excellent quality of the information). Ten packages (for which we had at least 10 respondents) corresponded to this category: \Rpkg{EMbC} ($94\%$), \Rpkg{momentuHMM} ($92\%$), \Rpkg{bcpa} ($92\%$), \Rpkg{moveHMM} ($90\%$), \Rpkg{adehabitatLT} ($88\%$), \Rpkg{move} ($86\%$), \Rpkg{adehabitatHS} ($86\%$), \Rpkg{adehabitatHR} ($83\%$), \Rpkg{ctmm} ($82\%$) and \Rpkg{recurse} ($82\%$). We also asked about the relevance of each package for the user's work. All of the great-documentation packages were either important or essential for the core work of more than half of their users.
@@ -399,9 +405,9 @@ The dependency and suggestion information (collected in August 2018) was used fo
 
 
 \begin{figure}
-	\centering
-	\includegraphics[width=1\textwidth]{./mes_images/NetworkImportSuggestTrack2.pdf}
-	\caption{\label{fig:NetImpSuggMov} Network representation of the dependency and suggestion between tracking packages. The arrows go towards the package the others suggest (dashed arrows) or depend on (solid arrows). Bold font corresponds to active packages. The size of the circle is proportional to the number of packages that suggest or depend on this one.}
+        \centering
+        \includegraphics[width=1\textwidth]{./mes_images/NetworkImportSuggestTrack2.pdf}
+        \caption{\label{fig:NetImpSuggMov} Network representation of the dependency and suggestion between tracking packages. The arrows go towards the package the others suggest (dashed arrows) or depend on (solid arrows). Bold font corresponds to active packages. The size of the circle is proportional to the number of packages that suggest or depend on this one.}
 \end{figure}
 
 \section*{Discussion}
@@ -425,10 +431,10 @@ This work is not intended to tell ecologists exactly which packages to use, but 
 
 When developers are working on new packages, we recommend they consider the following questions:
 \begin{itemize}
-	\item Does your package fill a gap or need? Does a function of the package perform a novel task that does not already exist in another published package? Can those functions be instead added to an existing package? Developers should contemplate the possibility (and appropriateness) of contacting authors of existing and actively maintained packages to add functions into them. We also suggest the authors of the existing packages to be open to considering the integration of new functions (and new collaborators) to their package.
-	\item Does the package handle commonly used data classes (e.g. sp, ltraj), so that it is compatible with the use of other packages?
-	\item Is the documentation clear, exhaustive on the functions, with methods description or references available? The latter is even more important if the package implements a new method of analysis. Citing papers rather than explaining the methods is the easiest way to back their procedures up, but authors should consider that not all scientific articles are open access, which means that some potential package users could have free access to the package but not to its methodological support. Worked examples and vignettes can enable researchers to learn the package more easily, minimizing the need for additional support.
-	\item Who will maintain the package over time? If a PhD student or a postdoctoral researcher creates a package and after a while is no longer invested in its maintenance, then the lab's PI could take responsibility for the package or delegate responsibility to someone else. 
+        \item Does your package fill a gap or need? Does a function of the package perform a novel task that does not already exist in another published package? Can those functions be instead added to an existing package? Developers should contemplate the possibility (and appropriateness) of contacting authors of existing and actively maintained packages to add functions into them. We also suggest the authors of the existing packages to be open to considering the integration of new functions (and new collaborators) to their package.
+        \item Does the package handle commonly used data classes (e.g. sp, ltraj), so that it is compatible with the use of other packages?
+        \item Is the documentation clear, exhaustive on the functions, with methods description or references available? The latter is even more important if the package implements a new method of analysis. Citing papers rather than explaining the methods is the easiest way to back their procedures up, but authors should consider that not all scientific articles are open access, which means that some potential package users could have free access to the package but not to its methodological support. Worked examples and vignettes can enable researchers to learn the package more easily, minimizing the need for additional support.
+        \item Who will maintain the package over time? If a PhD student or a postdoctoral researcher creates a package and after a while is no longer invested in its maintenance, then the lab's PI could take responsibility for the package or delegate responsibility to someone else. 
 \end{itemize} 
 
 Taking these questions into account can help maximizing the usefulness of individual packages and strengthen the links between package developers. A stronger community of developers  highly benefits the users: a limited number of strongly-related packages, that are continuously maintained with new functions (and sound documentation) added, are easy to follow and use. Communication between movement ecologists is essential to foster this community. 
@@ -445,9 +451,9 @@ The ability to analyze biologging data is essential to answer ecological questio
 %%Spatial or temporal packages were not part of this review as they are not movement packages. However, they play a major role supporting the movement packages to handle spatiotemporal data. An analysis of package dependency showed that the two most dependent-on packages for movement were sp and raster, two spatial packages (Fig. \ref{fig:DepBarplot}). High in the ranking (with 10 or more dependencies) are also \Rpkg{maptools}, \Rpkg{geosphere}, \Rpkg{rgdal} and \Rpkg{lubridate}, the latter a time related package. A relatively new package that allows handling spatiotemporal data in a simple way is sf (2016). Currently, only \Rpkg{rpostgisLT} and \Rpkg{crawl} depend on this package. Because of its simplicity, sf could be a game changer in R package dependency in the next years: it is expected that new packages will depend on it, and actively maintained movement packages will also have to turn to a sf dependency. \todo[color=blue!20]{Is this paragraph still relevant?}
 %%
 %%\begin{figure}
-%%	\centering
-%%	\includegraphics[width=0.75\textwidth]{./mes_images/Dependency-Barplot.pdf}
-%%	\caption{\label{fig:DepBarplot} Number of movement packages that require (depend, import or link to) each of these packages. Only the list of packages required by at least 5 movement packages are shown. The text in blue corresponds to a movement package.}
+%%      \centering
+%%      \includegraphics[width=0.75\textwidth]{./mes_images/Dependency-Barplot.pdf}
+%%      \caption{\label{fig:DepBarplot} Number of movement packages that require (depend, import or link to) each of these packages. Only the list of packages required by at least 5 movement packages are shown. The text in blue corresponds to a movement package.}
 %%\end{figure}
 %
 
