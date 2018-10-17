@@ -7,7 +7,7 @@
 
 \newcommand{\Rpkg}[1]{\texttt{#1}}
 
-\title{Navigating through the R packages for movement}
+\title{Navigating through R movement packages}
 \running{R tracking packages review}
 
 \author{Rocio Joo$^{1*}$ et al.}
@@ -29,14 +29,13 @@
 \maketitle
 
 
-\begin{abstract}                %MB: The abstract could be simplified… but I'm lacking time. Let me know if you want me to look at it tomorrow.
+\begin{abstract}
   \noindent \begin{enumerate}
-  \item The advent of miniaturized biologging devices has provided ecologists with unparalleled opportunities to record animal movement across scales. Technological advancements, including improvements to battery life and data storage, have lead to ever-increasing quantities of data. There have also been concurrent advances in the abundance and sophistication of tools used to process, visualize and analyze biologging data.   
-  \item In recent years, there has been greater emphasis on the standardization of methods, but these efforts often occur in parallel, such that there has been a proliferation of programming tools available, but little consensus or advice on their use. Within the R software alone, there are as many as \textcolor{blue}{57} packages for the processing or analysis of tracking data. 
-  \item We present a review of these R packages, called here tracking packages, which aims to enable researchers to access the appropriate tools and to provide package developers criteria on what needs to be improved, from a user perspective. Since the packages respond to needs of tools for data processing and analysis, we first divide these aspects into pre-processing, post-processing, data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others. We describe each of these aspects and, for each of them, we assess which packages offer suitable functionalities and summarize them. 
-  \item Supporting documentation is key to render a package accessible to new users. Based on a survey of users, we review the quality of the supporting documentation provided in conjunction with the packages, and identify $12$ packages considered as having good or excellent documentation. 
-  \item Compatibility and connectivity between packages is assessed through a network graph analysis. Though a large group of packages has some degree of connectivity (depending on functions or suggesting the use of another tracking package), a third of the packages work on isolation, reflecting a fragmentation in the R movement-ecology programming community. 
-  \item At the end of this review, we provide some recommendations to users for choosing packages and to developers for maximizing the usefulness of individual packages and strengthening the links between the programming community. 
+  \item The advent of miniaturized biologging devices has provided ecologists with unparalleled opportunities to record animal movement across scales, and led to the collection of ever-increasing quantities of tracking data. In parallel, sophisticated tools to process, visualize and analyze tracking data have been developed in abundance. Within the R software alone, we listed \textcolor{blue}{57} tracking packages. 
+  \item Here, we reviewed these tracking packages, as an introduction to this ecosystem of packages for researchers, and to provide feedback and recommendations to package developers, from a user perspective. We described each package based on a workflow centered around tracking data (i.e. $(x,y,t)$), broken down in three stages: pre-processing, post-processing, and analysis (data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others).
+  \item Supporting documentation is key to the accessibility of a package for users. Based on a user survey, we reviewed the quality of packages' documentation, and identified $12$ packages with good or excellent documentation. 
+  \item Links between packages is assessed through a network graph analysis. Although a large group of packages shows some degree of connectivity (either depending on functions or suggesting the use of another tracking package), a third of tracking packages work on isolation, reflecting a fragmentation in the R Movement-Ecology programming community. 
+  \item Finally, we provide recommendations for users to choose packages, and for developers to maximize usefulness of their contribution and strengthen the links between the programming community. %MB: But see Susana's comments about 'recommendations for users to choose packages'.
   \end{enumerate}
 \end{abstract}
 
