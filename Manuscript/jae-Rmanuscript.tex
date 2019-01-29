@@ -7,7 +7,7 @@
 
 \newcommand{\Rpkg}[1]{\texttt{#1}}
 
-\title{Navigating through the R packages for movement}
+\title{Navigating through R movement packages}
 \running{R tracking packages review}
 
 \author{Rocio Joo$^{1*}$ et al.}
@@ -29,14 +29,13 @@
 \maketitle
 
 
-\begin{abstract}                %MB: The abstract could be simplified… but I'm lacking time. Let me know if you want me to look at it tomorrow.
+\begin{abstract}
   \noindent \begin{enumerate}
-  \item The advent of miniaturized biologging devices has provided ecologists with unparalleled opportunities to record animal movement across scales. Technological advancements, including improvements to battery life and data storage, have lead to ever-increasing quantities of data. There have also been concurrent advances in the abundance and sophistication of tools used to process, visualize and analyze biologging data.   
-  \item While there has been greater emphasis on the standardization of methods there has been a proliferation of programming tools available, with little consensus or advice on their use. Within the R software alone, there are as many as 57 packages for the processing or analysis of tracking data. 
-  \item We present a review of these R packages, called here tracking packages, which aims to enable researchers to access the appropriate tools and to provide package developers recommendations of improvements which could be made, from a user perspective. Since the packages respond to needs of tools for data processing and analysis, we first divide these aspects into pre-processing, post-processing, data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others. We describe each of these aspects and, for each of them, we assess which packages offer suitable functionalities and summarize them. 
-  \item Supporting documentation is key to render a package accessible to new users. Based on a survey of users, we review the quality of the supporting documentation provided in conjunction with the packages, and found that $21\%$ packages were considered as having good or excellent documentation. 
-  \item Compatibility and connectivity between packages is assessed through a network graph analysis. Though a large group of packages has some degree of connectivity (depending on functions or suggesting the use of another tracking package), a third of the packages work on isolation, reflecting a fragmentation in the R movement-ecology programming community. 
-  \item We provide some criteria to users for choosing packages and to developers for maximizing the usefulness of individual packages and strengthening the links between the programming community. 
+\item The advent of miniaturized biologging devices has provided ecologists with unparalleled opportunities to record animal movement across scales, and led to the collection of ever-increasing quantities of tracking data. In parallel, sophisticated tools to process, visualize and analyze tracking data have been developed in abundance. Within the R software alone, we listed \textcolor{blue}{57} tracking packages. 
+  \item Here, we reviewed these tracking packages, as an introduction to this ecosystem of packages for researchers, and to provide feedback and recommendations to package developers, from a user perspective. We described each package based on a workflow centered around tracking data (i.e. $(x,y,t)$), broken down in three stages: pre-processing, post-processing, and analysis (data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others).
+  \item Supporting documentation is key to the accessibility of a package for users. Based on a user survey, we reviewed the quality of packages' documentation, and identified $12$ packages with good or excellent documentation. 
+  \item Links between packages is assessed through a network graph analysis. Although a large group of packages shows some degree of connectivity (either depending on functions or suggesting the use of another tracking package), a third of tracking packages work on isolation, reflecting a fragmentation in the R Movement-Ecology programming community. 
+  \item Finally, we provide recommendations for users to choose packages, and for developers to maximize usefulness of their contribution and strengthen the links between the programming community. %MB: But see Susana's comments about 'recommendations for users to choose packages'.
   \end{enumerate}
 \end{abstract}
 
@@ -412,10 +411,25 @@ Package developers could use the results of this survey (see \textcolor{blue}{Su
 \section*{Links between the packages}
 \label{section:links}
 
-We analyzed the links between tracking packages. If a package needs functions that have already been created by another package, they can use those functions by declaring this dependency in the description file of the package under `Depends on', `Imports' or `Linking to' categories. Theoretically there are some differences between the three, but in practice developers mix those groups, so we consider them as part of the same concept: dependency. A package can also suggest using other packages, for instance, a package focused on data analysis can suggest, in case data has to be cleaned first, the use of a package that allows post-processing. Since most packages define their own data classes, packages suggesting others often offer functions that allow compatibility with data classes from these other packages. 
+We analyzed the links between tracking packages. If a package needs functions that have already been created by another package, they can use those functions by declaring this dependency in the description file of the package under `Depends on', `Imports' or `Linking to' categories. Theoretically there are some differences between the three, but in practice developers mix those groups, so we consider them as part of the same concept: dependency. A package can also suggest using other packages, for instance, a package focused on data analysis can suggest, in case data has to be cleaned first, the use of a package that allows post-processing---''suggests'' do not have any strict dependency, and is totally at the discretion of the developer(s). Since most packages define their own formal data classes, packages suggesting others often offer functions that allow compatibility with data classes from these other packages. 
 
 The dependency and suggestion information (collected in August 2018) was used for a graph analysis of package links (Fig. \ref{fig:NetImpSuggMov}). $39$ packages in total showed some level of connections among them ($30$ in the form of one large group and three other small groups), while $18$ ($32\%$) of the packages worked in isolation. \Rpkg{adehabitatLT} and \Rpkg{move} were the most suggested/depended-on packages with 14 (including 8 dependencies) and 7 (2) links to them, respectively. Indeed, many packages use functions compatible with the 'ltraj' data class from \Rpkg{adehabitatLT}, and some others with the 'move' class from \Rpkg{move}. \Rpkg{amt} suggests more packages than any other (6), and it provides coercion methods for data classes from the packages it suggests. 
 %MB: Should we focus more on classes? This could be interesting, as it is what streamlines the workflow from Fig.1. In other words, focusing on tracking data means focusing on a class that implement tracking data in R. Having to deal with several of them makes it clunky, at best.
+
+%MB: My attempt to beef up a bit the idea of classes… Not sure if this should go here or better in the discussion. What is possible is that reviewers actually underline that this part does not flow very well, or needs more details… which would give another opportunity to make it better.
+Tracking data are central to our proposed workflow (Fig.~\ref{fig:DataProcess}), and as such, formal classes dealing with tracking data are central to the ecosystem of R movement packages. Tracking data, however, are not typical GIS data, due to their joint spatial and temporal nature---in essence, they are time series of spatial locations, but can also be viewed as connected segment of lines with a spatial components \textcolor{red}{(Turchin 1998)}. Formal classes in R thus need to acknowledge this dual nature, and be able to handle both the spatial, temporal, and geometric aspects of trajectories. Very few authors have formally addressed issues regarding the definition of R formal classes for tracking data \textcolor{red}{(but see Calenge et al. 2009). Several packages actually offer their own \emph{ad-hoc} class for tracking data, with limited connections with classes from other packages, thus adding to the fragmentation of the ecosystem, and the disruption of users' workflow. From this perspective, Movement Ecology, as a field, is probably due for an extensive overhaul aiming at defining clean and flexible formal classes for tracking data. Such efforts happened in the past, for instance for spatial data starting in 2005 with the package \Rpkg{sp} and more recently with \Rpkg{sf}, each time triggering dynamic development of packages using and relying on central spatial classes. As a matter of fact, similar efforts for tracking data could extend the spatial infrastructure offered by \Rpkg{sf} in order to handle the nature of tracking data (time series, missing locations, geometric nature, etc.).
+
+%MB: References:
+% 
+% - Calenge, Clément, Dray, Stéphane, & Royer-Carenzi,
+%   M. (2009). The concept of animals' trajectories from a data analysis
+%   perspective. Ecological Informatics, 4,
+%   34–41. http://dx.doi.org/10.1016/j.ecoinf.2008.10.002
+%   
+% - Turchin, P. (1998). Quantitative analysis of movement: measuring and
+%   modeling population redistribution in animals and
+%   plants. Sunderland, MA, USA: Sinauer Associates.
+
 
 \begin{figure}
         \centering
@@ -449,7 +463,7 @@ A regularly maintained package means that there is a person or team behind it, a
 
 When developers are working on new packages, we recommend they consider the following questions:
 \begin{itemize}
-        \item Does your package fill a gap or need? Does a function of the package perform a novel task that does not already exist in another published package? Can those functions be instead added to an existing package? Developers should contemplate the possibility (and appropriateness) of contacting authors of existing and actively maintained packages to add functions into them. We also suggest the authors of the existing packages to be open to considering the integration of new functions (and new collaborators) to their package.
+        \item Does your package fill a gap or need? Does a function of the package perform a novel task that does not already exist in another published package? Can those functions be instead added to an existing package? Developers should contemplate the possibility (and appropriateness) of contacting authors of existing and actively maintained packages to add functions into them. We also invite authors of existing packages to be open to external contributions, and consider integrating new functions (and new collaborators) to their package. Finally, an appropriate use of ``Suggests'' (i.e. documented and explain) would help the discovery of other related packages, and ensure people understand intended workflows and connections between packages.
         \item Does the package handle commonly used data classes (e.g. spatial classes from \Rpkg{sp}, 'ltraj' class from \Rpkg{adehabitatLT}), so that it is compatible with the use of other packages? %MB: Workflow again…
         \item Is the documentation clear, exhaustive on the functions, with methods description or references available? The latter is even more important if the package implements a new method of analysis. Citing papers is the easiest way to back their procedures up, but authors should not consider it as an alternative to explaining the methods: it is still largely helpful to present a method from a practical point of view, and not all scientific articles are open access, which means that some potential package users could have free access to the package but not to its methodological support. Worked %MB: Reproducible?
 examples and vignettes can enable researchers to learn the package more easily, minimizing the need for additional support.
