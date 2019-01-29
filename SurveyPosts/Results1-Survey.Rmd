@@ -1,0 +1,386 @@
+---
+title: "Survey on the R tracking packages: part I"
+author: "Rocio Joo and Matthew E. Boone"
+date: "October 14, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## A large amount of R packages for movement and the need for a survey
+
+The use of tracking devices is increasing as a consequence of the development of new and cheaper loggers. With large amounts of available data, more sophisticated tools to process, visualize and analyze data are being developed. One of the most used programming softwares for this matter is the free open source R software. We have identified more than 70 R packages created for that purpose! The large amount of existent packages makes it difficult to keep track of the spectrum of choices. For that reason, we aimed at assessing the current state of the art of the movement-related R packages regarding
+
+    1. How popular those packages are; 
+    2. How well documented they are; 
+    3. How relevant they are for users. 
+    
+Those were the three questions that we asked about the packages, plus one about the level as an R user of the survey participant. We will go to the details of each question later. 
+
+## Packages included in the survey
+
+In theory, any package could be potentially useful for movement analysis; either a time series package or a spatial analysis one or even $\texttt{ggplot2}$ to make more beautiful graphics! For this survey, we considered only packages created with the main purpose of 1) processing or analyzing data obtained from devices used to track organisms, or 2) analyze tracking data in general. Tracking data would have space and time components, i.e. at least (x,y,t), or assuming t as a general index in regular steps. 
+
+These packages are: $\texttt{acc}$, $\texttt{accelerometry}$, $\texttt{adehabitatHR}$, $\texttt{adehabitatHS}$, $\texttt{adehabitatLT}$, $\texttt{amt}$, $\texttt{animalTrack}$, $\texttt{anipaths}$, $\texttt{argosfilter}$, $\texttt{argosTrack}$, $\texttt{BayesianAnimalTracker}$, $\texttt{BBMM}$, $\texttt{bcpa}$, $\texttt{bsam}$, $\texttt{caribou}$, $\texttt{crawl}$, $\texttt{ctmcmove}$, $\texttt{ctmm}$, $\texttt{diveMove}$, $\texttt{drtracker}$, $\texttt{EMbC}$, $\texttt{feedR}$, $\texttt{FLightR}$, $\texttt{GeoLight}$, $\texttt{GGIR}$, $\texttt{hab}$, $\texttt{HMMoce}$, $\texttt{Kftrack}$, $\texttt{m2b}$, $\texttt{marcher}$, $\texttt{migrateR}$, $\texttt{mkde}$, $\texttt{momentuHMM}$, $\texttt{move}$, $\texttt{moveHMM}$, $\texttt{movement}$, $\texttt{movementAnalysis}$, $\texttt{moveNT}$, $\texttt{moveVis}$, $\texttt{moveWindSpeed}$, $\texttt{nparACT}$, $\texttt{pathtrackr}$, $\texttt{pawacc}$, $\texttt{PhysicalActivity}$, $\texttt{probgls}$, $\texttt{rbl}$, $\texttt{recurse}$, $\texttt{rhr}$, $\texttt{rpostgisLT}$, $\texttt{rsMove}$, $\texttt{SDLfilter}$, $\texttt{SGAT/TripEstimation}$, $\texttt{sigloc}$, $\texttt{SimilarityMeasures}$, $\texttt{SiMRiv}$, $\texttt{smam}$, $\texttt{SwimR}$, $\texttt{T-LoCoH}$, $\texttt{telemetr}$, $\texttt{trackdem}$, $\texttt{trackeR}$, $\texttt{Trackit}$, $\texttt{TrackReconstruction}$, $\texttt{TrajDataMining}$, $\texttt{trajectories}$, $\texttt{trip}$, $\texttt{TwGeos/BAStag}$, $\texttt{TwilightFree}$, $\texttt{Ukfsst/kfsst}$, $\texttt{VTrack}$ and $\texttt{wildlifeDI}$.
+
+Packages from any public repository (e.g. CRAN, GitHub, R-forge) were included in the survey. Packages created for eye, computer-mouse or fishing vessel movement were not considered here (but you are welcome to make your own survey about them!). 
+
+Note: $\texttt{trajr}$ was added to the survey in a late stage, but because of that, and the fact that it got only one response, we filtered it out of the analysis.
+
+## Participation in the survey
+
+The survey got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
+
+It was designed to be completely anonymous, meaning that we had no way to know who participated and not even the date of participation was saved. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the mablab website: \url{http://matlab.org}. 
+
+$446$ people participated in the survey, and $233$ answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
+
+
+## The questions
+
+### User level
+
+Let's see first the level of use in R of the participants. The options were:
+
+* Beginner: You only use existing packages and occasionally write some lines of code.
+* Intermediate: You use existing packages but you also write and optimize your own functions.
+* Advanced: You commonly use version control or contribute to develop packages.
+
+
+```{r, echo=FALSE, message=F}
+knitr::opts_chunk$set(echo = TRUE,fig.width=16, fig.height=10)
+library(tidyverse)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(reshape)
+library(RColorBrewer)
+library(kableExtra)
+# setwd('/home/matt/Dropbox/mablab/Rocio/MovementReview')
+data_all <- read.csv("survey_responses_20190128.csv",stringsAsFactors = FALSE) 
+data_all <- data_all %>% 
+  filter(completion == 100)
+
+packages <- read_csv('packages_survey_names.csv')
+
+### 4. R user
+data_question <- data_all[,grep("q4", colnames(data_all))]
+categories <- c("Beginner","Intermediate","Advanced")
+data_question <- factor(unlist(lapply(strsplit(data_question,'\\:'),'[[',1)),levels=categories)
+use_counts <- as.numeric(table(data_question))
+prop <- round(as.numeric(prop.table(table(data_question)))*100,1)
+use_counts<-data.frame(levels=categories,total=use_counts)
+use_counts$levels <- factor(as.character(use_counts$levels),levels=categories)
+ggplot(data=use_counts,aes(x=levels,y=total)) + geom_bar(stat="identity", position=position_dodge()) +
+  geom_text(aes(label=total), vjust=1.5, hjust=1.2, color="white",
+            position = position_dodge(0.9), size=3.0) +  theme(axis.text.y = element_text( hjust = 1,size=5,vjust=0.25))
+
+```
+
+Most participants considered themselves in an intermediate level (`r prop[2]` %), though we had also beginners (`r prop[1]` %) and advanced (`r prop[3]` %) R users. 
+
+### Package use
+
+The first question about package use was: How often do you use each of these packages? (Never, Rarely, Sometimes, Often)
+
+The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. On the bottom of the graphic, $\texttt{smam}$ (for animal movement models), $\texttt{PhysicalActivity}$, $\texttt{nparACT}$, $\texttt{GGIR}$ (these three for accelerometry data on human patients) and $\texttt{feedr}$ (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
+
+```{r, echo=FALSE, message=F}
+data_question <- data_all[,grep("q1", colnames(data_all))]
+colnames(data_question) <- t(packages)
+# I'm dropping trajr that was added in the end and only got 1 response
+data_question <- data_question[,-grep("trajr",colnames(data_question))]
+packages_new <- packages[-which(packages=="trajr"),]
+
+categories <- c("Never","Rarely","Sometimes","Often")
+use_counts <- t(sapply(1:ncol(data_question),function(x){
+  data_line <- factor(data_question[,x],levels=categories)
+  count_p_use <- as.numeric(table(data_line))
+  return(count_p_use)
+}))
+use_counts<-data.frame(use_counts)
+colnames(use_counts) <- categories
+rownames(use_counts) <- t(packages_new)
+use_counts$package<-row.names(use_counts)
+
+df1<-melt(use_counts,id.vars='package',variable_name='response')
+g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!='Never'])))
+
+df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
+
+plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c('lightgray',brewer.pal(3,'Set2')))
+
+plot_use
+
+```
+
+If you want to check the numbers for your favorite package, the complete table is here: $\textit{(Matt, could we make a link to this table instead of publishing it directly here)}$
+
+```{r, echo=FALSE, message=F}
+kable(use_counts[,1:length(categories)])
+```
+
+### Package documentation
+
+The participants were asked how helpful was the documentation provided for each of the packages they stated to use. Documentation includes what is contained in the manual and help pages, vignettes, published manuscripts, and other material about the package provided by the authors. The participants had to answer using one of the following options:
+
+* Not enough: "It's not enough to let me know how to do what I need"
+* Basic: "It's enough to let me get started with simple use of the functions but not to go further (e.g. use all arguments in the functions, or put extra variables)"
+* Good: "I did everything I wanted and needed to do with it"
+* Excellent: "I ended up doing even more than what I planned because of the excellent information in the documentation"
+* Don't remember: "I honestly can't remember…"
+
+```{r, echo=FALSE, message=F}
+data_question <- data_all[,grep("q2", colnames(data_all))]
+colnames(data_question) <- t(packages)
+# I'm dropping trajr that was added in the end and only got 1 response
+data_question <- data_question[,-grep("trajr",colnames(data_question))]
+packages_new <- packages[-which(packages=="trajr"),]
+
+categories <- c("Not enough","Basic","Good","Excellent", "Don't remember")
+use_counts <- t(sapply(1:ncol(data_question),function(x){
+  data_line <- factor(data_question[,x],levels=categories)
+  count_p_use <- as.numeric(table(data_line))
+  return(count_p_use)
+}))
+use_counts<-data.frame(use_counts)
+colnames(use_counts) <- categories
+rownames(use_counts) <- t(packages_new)
+total_package <- rowSums(use_counts)
+use_counts$package<-row.names(use_counts)
+use_counts <- use_counts[total_package > 0,]
+
+df1<-melt(use_counts,id.vars='package',variable_name='response')
+
+g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!="Don't remember"])))
+
+df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
+
+plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c(brewer.pal(4,'Set2'),'lightgray'))
+
+plot_use
+
+```
+
+$\textit{Hey Matt, I need help to improve this plot. Starting with putting don't remember at the end of the plot. Kind of like 'Never' in the previous question. I don't know if this will look good, since it will not be filled with gray equally here. But we should try.}$
+
+Remember that participants could only give their opinion on documentation regarding the packages they had used, so the packages with many users got many documentation answers. The figure below allows for a closer look at the proportion of type of response for each package; though the number of absolute responses should not be disregarded. These are the packages with more then 25% of responses indicating "excellent documentation", ordered by the absolute number of "excellent" responses: $\texttt{adehabitatHR}$ (33.5%; 62), $\texttt{adehabitatLT}$ (36.9%; 58), $\texttt{adehabitatHS}$ (28.9%; 35), $\texttt{moveHMM}$ (32.9%; 25), $\texttt{momentuHMM}$ (44.2%; 19), $\texttt{EMbC}$ (28.0%; 7), $\texttt{probGLS}$ (33.3%; 2) and $\texttt{SiMRiv}$ (33.3%; 1).
+
+20 packages had more than 50% of the responses as either "good" or "excellent"; 14 of them were used by more than 10 participants (the absolute values given in parentheses are the total "good" and "excellent" responses): $\texttt{adehabitatHR}$ (75.1%; 139), $\texttt{adehabitatLT}$ (79.0%, 124), $\texttt{adehabitatHS}$ (71.9%; 87), $\texttt{moveHMM}$ (67.1%; 51), $\texttt{move}$ (56.3%; 49), $\texttt{ctmm}$ (57.1%; 32), $\texttt{momentuHMM}$ (69.8%; 30), $\texttt{moveVis}$ (57.9%; 22), $\texttt{GeoLight}$ (65.6%; 21), $\texttt{EMbC}$ (72%; 18), $\texttt{bsam}$ (59.3%; 16), $\texttt{bcpa}$ (51.7%; 15), $\texttt{diveMove}$ (63.6%; 14) and $\texttt{wildlifeDI}$ (65.0%; 13).
+
+
+```{r, echo=FALSE, message=F}
+use_counts_df <- use_counts[,-ncol(use_counts)]
+total_package <- rowSums(use_counts_df)
+use_counts_df <- use_counts_df/total_package
+use_counts_df$package<-row.names(use_counts)
+
+use_counts[which(use_counts_df$Excellent>0.25),]
+Good_Exc <- use_counts_df$Good + use_counts_df$Excellent
+Good_Exc_abs <- use_counts$Good + use_counts$Excellent
+use_counts_2 <- cbind.data.frame(use_counts,Good_Exc_abs,Good_Exc)
+use_counts_2[which(Good_Exc>0.5 & total_package > 10) ,]
+
+df1<-melt(use_counts_df,id.vars='package',variable_name='response')
+
+g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!="Don't remember"])))
+
+df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
+
+plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c(brewer.pal(4,'Set2'),'lightgray'))
+
+plot_use
+
+
+```
+
+$\textit{I need help with the same thing here, and to sort the packages ordered by the percentage of excellent (just to try how it looks)}$.
+
+
+## Survey representativity
+
+To get a rough idea of how representative the survey was of the population of the package users, we compared the number of participants that used each package to the number of monthly downloads that each package has. 
+<!-- If the number of users based on the survey is proportional to the number of downloads, we could assume that the sample is representative. -->
+
+The number of downloads were calculated using the R package cran.stats. It calculates the number of independent downloads by each package (substracting downloads by dependencies) by day. It only works for downloads using Rstudio, and for packages on CRAN. So for the tracking packages on CRAN, we computed the average of downloads per month, from September 2017 to August 2018; less months were considered for packages that were less than one year old. 
+
+There is no perfect match between the number of users and the number of downloads per package, but a correlation 0.77 for the 58 packages on CRAN, provides evidence of a good representativity of the users of tracking packages in the survey. If we discard the packages that were not used by any survey participant, the correlation increases to 0.86. 
+A log-log plot for both metrics is shown in the figure below.  
+
+<!-- [DO THIS!] -->
+
+
+
+<!-- ```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE} -->
+<!-- library(tidyverse) -->
+<!-- library(ggplot2) -->
+<!-- library(ggrepel) -->
+<!-- path_data <- paste0('./SurveyPosts/') -->
+<!-- matrix_all <- read.csv(paste0(path_data,"Survey_Processed.csv")) -->
+<!-- names(matrix_all) <- c("package",names(matrix_all)[2:ncol(matrix_all)]) -->
+<!-- funciones <- read.csv(paste0(path_data,"RmovementPackagesMetadata-before20180830.csv")) -->
+<!-- matrix_fun <- left_join(matrix_all,funciones) -->
+<!-- matrix_fun <- matrix_fun[matrix_fun$downloads.month>0,] -->
+<!-- # discarding the packages we did not get users from: -->
+<!-- matrix_fun_2 <- matrix_fun[matrix_fun$Use_Counts > 0,] # missing: "feedR"            "GGIR"             "nparACT"          "PhysicalActivity" "smam"             -->
+<!-- matrix_fun_3 <- matrix_fun[matrix_fun$Use_Counts >= 10,]  -->
+<!-- theme1<-function() {theme(text = element_text(size=10),axis.text.x = element_text(angle=0, hjust=0),legend.position = "none")} -->
+<!-- ggplot(matrix_fun,aes(x=Use_Counts, y=downloads.month)) +  -->
+<!--   geom_point(size=2) + -->
+<!--   xlab('Number of users') + ylab("Monthly downloads") + -->
+<!--   geom_text_repel(label=matrix_fun$package,  segment.size=0.6,force=3,segment.alpha=.25,hjust=0,box.padding=0.5,min.segment.length=.1,size=2.7, direction = "both") + -->
+<!--   scale_x_continuous(trans='log10')+ -->
+<!--   scale_y_continuous(trans='log10') + theme_classic() + theme1() -->
+<!-- # cor(matrix_fun$Use_Counts,matrix_fun$downloads.month,use="pairwise.complete.obs") -->
+<!-- # cor(matrix_fun_2$Use_Counts,matrix_fun_2$downloads.month,use="pairwise.complete.obs") -->
+<!-- ``` -->
+
+
+<!-- ## Overview of the answers (user levels, which packages they were using) [take Matt's code] -->
+
+<!-- ```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE} -->
+<!-- library(tidyverse) -->
+<!-- library(ggplot2) -->
+<!-- library(ggrepel) -->
+<!-- path_data <- paste0('./SurveyPosts/') -->
+<!-- matrix_all <- read.csv(paste0(path_data,"Survey_Processed.csv")) -->
+<!-- names(matrix_all) <- c("package",names(matrix_all)[2:ncol(matrix_all)]) -->
+<!-- ``` -->
+
+
+<!-- From the $XXX$,  -->
+
+
+
+
+<!-- ## Next posts: -->
+
+<!-- ### Presenting the paper with a sneak peak on survey results -->
+
+<!-- ### Survey representativity (answers versus downloads) -->
+
+<!-- ### Univariate results and debate on how to quantify them -->
+
+<!-- ### Multivariate analysis -->
+
+<!-- ### Papers citing them? -->
+
+<!-- ### Open Source -->
+
+
+
+
+<!-- are working on a review of the packages intended as a road map for users, to know what exists and their purpose, and discuss new challenges for package developers. -->
+
+<!-- ## Survey Questions -->
+
+<!-- The purpose of this anonymous survey (see the call to participate in [LINK]) was an assessment about the current state of the art of movement-related R packages about three aspects: -->
+
+<!--  focused on tracking or trajectory data, -->
+
+<!-- All of the packages in the main manuscript were considered in the survey except for trajr, which was identified for the review after the survey started.  -->
+
+<!-- The survey got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250. -->
+
+<!-- Since the only question analyzed for the purpose of this review concerns package documentation, we only detail that question here.  -->
+
+<!-- <!-- In the next sections, I describe the questions in the survey. --> -->
+
+<!-- <!-- ### Package usage --> -->
+
+<!-- <!-- A list of packages, containing all of the packages in this review except trajr, which was added later to the review, was provided. Participants had to answer: --> -->
+
+<!-- <!-- How often do you use each of these packages? 1) Never, 2) rarely, 3) sometimes, 4) often. --> -->
+
+<!-- <!-- Based on the answers of this question, for the next two questions, only the packages that participants marked options different than 'never' were shown.  --> -->
+
+<!-- ### Package documentation  -->
+
+<!-- How helpful is the documentation provided for each of the packages you've used for your work? Documentation includes what is contained in the manual and help pages, vignettes, published manuscripts, and other material about the package provided by the authors. -->
+<!-- Please answer using one of the following options: -->
+
+<!--     • Not enough: It's not enough to let me know how to do what I need;  -->
+<!--     • Basic: It's enough to let me get started with simple use of the functions but not to go  -->
+<!--       further (e.g. use all arguments in the functions, or put extra variables);  -->
+<!--     • Good: I did everything I wanted and needed to do with it;  -->
+<!--     • Excellent: I ended up doing even more than what I planned because of the excellent  -->
+<!--       information in the documentation.  -->
+<!--     • Don't remember: I honestly can't remember…  -->
+
+<!-- <!-- ### Package relevance  --> -->
+
+<!-- <!-- How relevant is each of the packages you've used for your work? --> -->
+<!-- <!-- Please answer using one of the following options: --> -->
+
+<!-- <!--     • Not relevant: I tried the package but really didn't find it a good use for my work;  --> -->
+<!-- <!--     • Slightly relevant: It helps in my work, but not for the core of it;  --> -->
+<!-- <!--     • Important: It's important for the core of my work, but if it didn't exist, there are  --> -->
+<!-- <!--       other packages or solutions to obtain something similar;  --> -->
+<!-- <!--     • Essential: I wouldn't have done the key part of my work without this package. --> -->
+
+<!-- <!-- ### User profile  --> -->
+
+<!-- <!-- What kind of R user do you consider yourself? --> -->
+
+<!-- <!-- Choose one of the following answers --> -->
+
+<!-- <!--     • Beginner: You only use existing packages and occasionally write some lines of code.  --> -->
+<!-- <!--     • Intermediate: You use existing packages but you also write and optimize your own functions.  --> -->
+<!-- <!--     • Advanced: You commonly use version control or contribute to develop packages. --> -->
+
+<!-- ## Survey representativity  -->
+
+<!-- There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the mablab website: \url{http://matlab.org}. We analyzed only completed surveys (all questions answered); 225 participants completed the survey. -->
+
+<!-- To get an idea of how representative the survey was of the population of R-tracking-packages users, we compared the number of participants that used each package to the number of monthly downloads that each package has.  -->
+<!-- <!-- If the number of users based on the survey is proportional to the number of downloads, we could assume that the sample is representative. --> -->
+
+<!-- The number of downloads were calculated using the R package cran.stats. It calculates the number of independent downloads by each package (substracting downloads by dependencies) by day. It only works for downloads using Rstudio, and for packages on CRAN. So for the tracking packages on CRAN, we computed the average of downloads per month, from September 2017 to August 2018; less months were considered for packages that were less than one year old.  -->
+
+<!-- There is no perfect match between the number of users and the number of downloads per package, but a correlation 0.88 for the 42 packages on CRAN, provides evidence of a good representativity of the users of tracking packages in the survey. A log-log plot for both metrics is shown in the figure below.   -->
+
+
+<!-- <!-- ```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE} --> -->
+<!-- <!-- library(tidyverse) --> -->
+<!-- <!-- library(ggplot2) --> -->
+<!-- <!-- library(ggrepel) --> -->
+<!-- <!-- path_data <- paste0('../Data/') --> -->
+<!-- <!-- matrix_all <- read.csv(paste0(path_data,"Survey_Processed_Summary.csv")) --> -->
+<!-- <!-- names(matrix_all) <- c("package",names(matrix_all)[2:ncol(matrix_all)]) --> -->
+<!-- <!-- funciones <- read.csv(paste0(path_data,"packages_newlist_20181007_help.csv")) --> -->
+<!-- <!-- matrix_fun <- left_join(matrix_all,funciones) --> -->
+<!-- <!-- matrix_fun <- matrix_fun[!is.na(matrix_fun$Number_Functions),] --> -->
+<!-- <!-- # discarding the packages we did not get users from: --> -->
+<!-- <!-- matrix_fun_2 <- matrix_fun[matrix_fun$Use_Counts > 0,] # missing: "feedR"            "GGIR"             "nparACT"          "PhysicalActivity" "smam"             --> -->
+<!-- <!-- matrix_fun_3 <- matrix_fun[matrix_fun$Use_Counts >= 10,]  --> -->
+<!-- <!-- theme1<-function() {theme(text = element_text(size=10),axis.text.x = element_text(angle=0, hjust=0),legend.position = "none")} --> -->
+<!-- <!-- ggplot(matrix_fun_2,aes(x=Use_Counts, y=Downloads)) +  --> -->
+<!-- <!--   geom_point(size=2) + --> -->
+<!-- <!--   xlab('Number of users') + ylab("Monthly downloads") + --> -->
+<!-- <!--   geom_text_repel(label=matrix_fun_2$package,  segment.size=0.6,force=3,segment.alpha=.25,hjust=0,box.padding=0.5,min.segment.length=.1,size=2.7, direction = "both") + --> -->
+<!-- <!--   scale_x_continuous(trans='log10')+ --> -->
+<!-- <!--   scale_y_continuous(trans='log10') + theme_classic() + theme1() --> -->
+<!-- <!-- # cor(matrix_fun_2$Use_Counts,matrix_fun_2$Downloads,use="pairwise.complete.obs") --> -->
+<!-- <!-- ``` --> -->
+
+<!-- ## Description of survey analysis -->
+
+<!-- Only responses of participants who remembered the documentation, and packages with more than 10 respondents were considered in the analysis.  -->
+
+<!-- We counted the number of participants who expressed that the documentation was either good or excellent, and divided by the total of answers on documentation given about the package. The packages that had more than $0.75$ (or $75\%$), were considered to have "adequate documentation".  -->
+
+<!-- <!-- ## Summarized results of the survey --> -->
+
+<!-- <!-- Here are the results of the survey regarding documentation as well as the count of participants that use each package.   --> -->
+
+<!-- <!-- ```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE} --> -->
+<!-- <!-- library(knitr) --> -->
+<!-- <!-- denom <- matrix_all$Not.enough + matrix_all$Basic + matrix_all$Good + matrix_all$Excellent --> -->
+<!-- <!-- # select_in <- which(denom >= 10) --> -->
+<!-- <!-- matrix_all$Adequate_Doc <- round((matrix_all$Good + matrix_all$Excellent)/denom,2) --> -->
+<!-- <!-- # print(matrix_all) --> -->
+<!-- <!-- row.names(matrix_all) <- NULL --> -->
+<!-- <!-- kable(matrix_all,row.names = FALSE) --> -->
+<!-- <!-- ``` --> -->
