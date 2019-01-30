@@ -17,6 +17,8 @@ The purpose of this anonymous survey was an assessment about the current state o
     2. How well documented they are; 
     3. How relevant they are for users. 
 
+All of the packages in the main manuscript were considered in the survey except for trajr, which was identified for the review after the survey started. 
+
 The survey got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
 
 Since the only question analyzed for the purpose of this review concerns package documentation, we only detail that question here. 
@@ -67,7 +69,7 @@ Please answer using one of the following options:
 
 ## Survey representativity 
 
-There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, email lists and the mablab website: \url{http://matlab.org}. We analyzed only completed surveys (all questions answered); 225 participants completed the survey.
+There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the mablab website: \url{http://matlab.org}. We analyzed only completed surveys (all questions answered); 225 participants completed the survey.
 
 To get an idea of how representative the survey was of the population of R-tracking-packages users, we compared the number of participants that used each package to the number of monthly downloads that each package has. 
 <!-- If the number of users based on the survey is proportional to the number of downloads, we could assume that the sample is representative. -->
@@ -93,26 +95,29 @@ matrix_fun_3 <- matrix_fun[matrix_fun$Use_Counts >= 10,]
 theme1<-function() {theme(text = element_text(size=10),axis.text.x = element_text(angle=0, hjust=0),legend.position = "none")}
 ggplot(matrix_fun_2,aes(x=Use_Counts, y=Downloads)) + 
   geom_point(size=2) +
-  xlab('Package Use Count') + ylab("Downloads") +
+  xlab('Number of users') + ylab("Monthly downloads") +
   geom_text_repel(label=matrix_fun_2$package,  segment.size=0.6,force=3,segment.alpha=.25,hjust=0,box.padding=0.5,min.segment.length=.1,size=2.7, direction = "both") +
   scale_x_continuous(trans='log10')+
   scale_y_continuous(trans='log10') + theme_classic() + theme1()
 # cor(matrix_fun_2$Use_Counts,matrix_fun_2$Downloads,use="pairwise.complete.obs")
 ```
 
-## Survey analysis
+## Description of survey analysis
 
-For this work, we only analyzed the question about package documentation; only responses of participants who remembered the documentation were considered in the analysis. 
+Only responses of participants who remembered the documentation, and packages with more than 10 respondents were considered in the analysis. 
 
-We counted the number of participants who expressed that the documentation was either good or excellent, and divided by the total of answers on documentation given about the package. The packages that had more than $0.75$ (or $75\%$) and at least 10 respondents, were considered to have "great documentation". 
+We counted the number of participants who expressed that the documentation was either good or excellent, and divided by the total of answers on documentation given about the package. The packages that had more than $0.75$ (or $75\%$), were considered to have "adequate documentation". 
 
-## Summarized results
+## Summarized results of the survey
 
-Here are the results of the survey regarding documentation as well as the count of participants that use each package.
+Here are the results of the survey regarding documentation as well as the count of participants that use each package.  
 
 ```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
 library(knitr)
-matrix_all$Great_Doc <- round((matrix_all$Good + matrix_all$Excellent)/(matrix_all$Not.enough + matrix_all$Basic + matrix_all$Good + matrix_all$Excellent),2)
+denom <- matrix_all$Not.enough + matrix_all$Basic + matrix_all$Good + matrix_all$Excellent
+# select_in <- which(denom >= 10)
+matrix_all$Adequate_Doc <- round((matrix_all$Good + matrix_all$Excellent)/denom,2)
 # print(matrix_all)
-kable(matrix_all)
+row.names(matrix_all) <- NULL
+kable(matrix_all,row.names = FALSE)
 ```
