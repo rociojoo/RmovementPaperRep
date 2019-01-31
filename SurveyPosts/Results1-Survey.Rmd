@@ -8,7 +8,22 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+```{r, echo=FALSE, message=F}
+knitr::opts_chunk$set(echo = TRUE,fig.width=16, fig.height=10)
+library(tidyverse)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(reshape)
+library(RColorBrewer)
+library(kableExtra)
+setwd('~/r_programs/RmovementPaperRep/SurveyPosts')
+data <- read.csv("survey_responses_20190130.csv",stringsAsFactors = FALSE) 
+data_all <- data %>% 
+  filter(completion == 100)
 
+packages <- read_csv('packages_survey_names.csv')
+```
 ## A large amount of R packages for movement and the need for a survey
 
 The use of tracking devices is increasing as a consequence of the development of new and cheaper loggers. With large amounts of available data, more sophisticated tools to process, visualize and analyze data are being developed. One of the most used programming softwares for this matter is the free open source R software. We have identified more than 70 R packages created for that purpose! The large amount of existent packages makes it difficult to keep track of the spectrum of choices. For that reason, we aimed at assessing the current state of the art of the movement-related R packages regarding
@@ -21,13 +36,13 @@ Those were the three questions that we asked about the packages, plus one about 
 
 ## Packages included in the survey
 
-In theory, any package could be potentially useful for movement analysis; either a time series package, a spatial analysis one or even $\texttt{ggplot2}$ to make more beautiful graphics! For this survey, we considered only packages created with the main purpose of 1) processing or analyzing data obtained from devices used to track organisms, or 2) analyze tracking data in general. Tracking data would have space and time components, i.e. at least (x,y,t), or assuming t as a general index in regular steps. 
+In theory, any package could be potentially useful for movement analysis; either a time series package, a spatial analysis one or even *ggplot2* to make more beautiful graphics! For this survey, we considered only packages created with the main purpose of 1) processing or analyzing data obtained from devices used to track organisms, or 2) analyze tracking data in general. Tracking data would have space and time components, i.e. at least (x,y,t), or assuming t as a general index in regular steps. 
 
-These packages are: $\texttt{acc}$, $\texttt{accelerometry}$, $\texttt{adehabitatHR}$, $\texttt{adehabitatHS}$, $\texttt{adehabitatLT}$, $\texttt{amt}$, $\texttt{animalTrack}$, $\texttt{anipaths}$, $\texttt{argosfilter}$, $\texttt{argosTrack}$, $\texttt{BayesianAnimalTracker}$, $\texttt{BBMM}$, $\texttt{bcpa}$, $\texttt{bsam}$, $\texttt{caribou}$, $\texttt{crawl}$, $\texttt{ctmcmove}$, $\texttt{ctmm}$, $\texttt{diveMove}$, $\texttt{drtracker}$, $\texttt{EMbC}$, $\texttt{feedR}$, $\texttt{FLightR}$, $\texttt{GeoLight}$, $\texttt{GGIR}$, $\texttt{hab}$, $\texttt{HMMoce}$, $\texttt{Kftrack}$, $\texttt{m2b}$, $\texttt{marcher}$, $\texttt{migrateR}$, $\texttt{mkde}$, $\texttt{momentuHMM}$, $\texttt{move}$, $\texttt{moveHMM}$, $\texttt{movement}$, $\texttt{movementAnalysis}$, $\texttt{moveNT}$, $\texttt{moveVis}$, $\texttt{moveWindSpeed}$, $\texttt{nparACT}$, $\texttt{pathtrackr}$, $\texttt{pawacc}$, $\texttt{PhysicalActivity}$, $\texttt{probgls}$, $\texttt{rbl}$, $\texttt{recurse}$, $\texttt{rhr}$, $\texttt{rpostgisLT}$, $\texttt{rsMove}$, $\texttt{SDLfilter}$, $\texttt{SGAT/TripEstimation}$, $\texttt{sigloc}$, $\texttt{SimilarityMeasures}$, $\texttt{SiMRiv}$, $\texttt{smam}$, $\texttt{SwimR}$, $\texttt{T-LoCoH}$, $\texttt{telemetr}$, $\texttt{trackdem}$, $\texttt{trackeR}$, $\texttt{Trackit}$, $\texttt{TrackReconstruction}$, $\texttt{TrajDataMining}$, $\texttt{trajectories}$, $\texttt{trip}$, $\texttt{TwGeos/BAStag}$, $\texttt{TwilightFree}$, $\texttt{Ukfsst/kfsst}$, $\texttt{VTrack}$ and $\texttt{wildlifeDI}$.
+These packages are: *acc*, *accelerometry*, *adehabitatHR*, *adehabitatHS*, *adehabitatLT*, *amt*, *animalTrack*, *anipaths*, *argosfilter*, *argosTrack*, *BayesianAnimalTracker*, *BBMM*, *bcpa*, *bsam*, *caribou*, *crawl*, *ctmcmove*, *ctmm*, *diveMove*, *drtracker*, *EMbC*, *feedR*, *FLightR*, *GeoLight*, *GGIR*, *hab*, *HMMoce*, *Kftrack*, *m2b*, *marcher*, *migrateR*, *mkde*, *momentuHMM*, *move*, *moveHMM*, *movement*, *movementAnalysis*, *moveNT*, *moveVis*, *moveWindSpeed*, *nparACT*, *pathtrackr*, *pawacc*, *PhysicalActivity*, *probgls*, *rbl*, *recurse*, *rhr*, *rpostgisLT*, *rsMove*, *SDLfilter*, *SGAT/TripEstimation*, *sigloc*, *SimilarityMeasures*, *SiMRiv*, *smam*, *SwimR*, *T-LoCoH*, *telemetr*, *trackdem*, *trackeR*, *Trackit*, *TrackReconstruction*, *TrajDataMining*, *trajectories*, *trip*, *TwGeos/BAStag*, *TwilightFree*, *Ukfsst/kfsst*, *VTrack* and *wildlifeDI*.
 
 Packages from any public repository (e.g. CRAN, GitHub, R-forge) were included in the survey. Packages created for eye, computer-mouse or fishing vessel movement were not considered here (but you are welcome to make your own survey about them!). 
 
-Note: $\texttt{trajr}$ was added to the survey in a late stage, but because of that, and the fact that it got only one response, we filtered it out of the analysis.
+Note: *trajr* was added to the survey in a late stage, but because of that, and the fact that it got only one response, we filtered it out of the analysis.
 
 ## Participation in the survey
 
@@ -35,7 +50,7 @@ The survey was designed to be completely anonymous, meaning that we had no way t
 
 It got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
 
-$446$ people participated in the survey, and $233$ answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
+`r data %>% filter(!is.na(completion)) %>% nrow()` people participated in the survey, and `r data %>% filter(completion==100) %>% nrow()` answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
 
 
 ## The questions
@@ -49,21 +64,8 @@ Let's see first the level of use in R of the participants. The options were:
 * Advanced: You commonly use version control or contribute to develop packages.
 
 
-```{r, echo=FALSE, message=F}
-knitr::opts_chunk$set(echo = TRUE,fig.width=16, fig.height=10)
-library(tidyverse)
-library(ggplot2)
-library(ggrepel)
-library(dplyr)
-library(reshape)
-library(RColorBrewer)
-library(kableExtra)
-# setwd('/home/matt/Dropbox/mablab/Rocio/MovementReview')
-data_all <- read.csv("survey_responses_20190130.csv",stringsAsFactors = FALSE) 
-data_all <- data_all %>% 
-  filter(completion == 100)
-
-packages <- read_csv('packages_survey_names.csv')
+```{r User experience, echo=FALSE, message=F, fig.width=14, fig.height=10}
+#knitr::opts_chunk$set(echo = TRUE,fig.width=16, fig.height=8)
 
 ### 4. R user
 data_question <- data_all[,grep("q4", colnames(data_all))]
@@ -74,20 +76,25 @@ prop <- round(as.numeric(prop.table(table(data_question)))*100,1)
 use_counts<-data.frame(levels=categories,total=use_counts)
 use_counts$levels <- factor(as.character(use_counts$levels),levels=categories)
 ggplot(data=use_counts,aes(x=levels,y=total)) + geom_bar(stat="identity", position=position_dodge()) +
-  geom_text(aes(label=total), vjust=1.5, hjust=1.2, color="white",
-            position = position_dodge(0.9), size=3.0) +  theme(axis.text.y = element_text( hjust = 1,size=5,vjust=0.25))
+  geom_text(aes(label=total), size=6.0, vjust=1.5, hjust=1.2, color="white",
+            position = position_dodge(0.9)) +  theme_classic() +
+            theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+                  axis.title =element_text(size=24),
+                  axis.text =element_text(size=15))
 
 ```
-
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
 Most participants considered themselves in an intermediate level (`r prop[2]` %), meaning that they could write functions in R. Some others were beginners (`r prop[1]` %) and advanced (`r prop[3]` %) R users. 
 
 ### Package use
 
 The first question about package use was: How often do you use each of these packages? (Never, Rarely, Sometimes, Often)
 
-The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. On the bottom of the graphic, $\texttt{smam}$ (for animal movement models), $\texttt{PhysicalActivity}$, $\texttt{nparACT}$, $\texttt{GGIR}$ (these three for accelerometry data on human patients) and $\texttt{feedr}$ (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
+The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. On the bottom of the graphic, *smam* (for animal movement models), *PhysicalActivity*, *nparACT*, *GGIR* (these three for accelerometry data on human patients) and *feedr* (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
 
-```{r, echo=FALSE, message=F}
+```{r relevance, echo=FALSE, message=F, fig.width=16, fig.height=15}
 data_question <- data_all[,grep("q1", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -109,19 +116,27 @@ df1<-melt(use_counts,id.vars='package',variable_name='response')
 g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!='Never'])))
 
 df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
-
-plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c('lightgray',brewer.pal(3,'Set2')))
-
-plot_use
+color.pallete<-brewer.pal(5,'YlGnBu')
+color.pallete[1]<-'lightgray'
+ ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + ylab('count') +coord_flip() + scale_fill_manual(values=color.pallete) + theme_classic()+
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=15),
+        legend.text=element_text(size=16),
+        legend.title=element_blank())
 
 ```
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
 
-If you want to check the numbers for your favorite package, the complete table is here: $\textit{(Matt, could we make a link to this table instead of publishing it directly here)}$
-
-```{r, echo=FALSE, message=F}
-kable(use_counts[,1:length(categories)])
+If you want to check the numbers for your favorite package, the complete table is [here](make another page for just the table)
+<!--
+```{r relevance table, echo=FALSE, message=F}
+kable(use_counts[,1:length(categories)]) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
-
+-->
 ### Package documentation
 
 Without proper user testing and peer editing, package documentation can lead to large gaps of understanding and limited usefulness of the package. If functions and workflows are not expressly defined, a package’s capacity to help users is undermined. 
@@ -134,7 +149,7 @@ In this survey we asked the participants how helpful was the documentation provi
 * Excellent: "I ended up doing even more than what I planned because of the excellent information in the documentation"
 * Don't remember: "I honestly can't remember…"
 
-```{r, echo=FALSE, message=F}
+```{r documentation, echo=FALSE, message=F, fig.width=16, fig.height=15}
 data_question <- data_all[,grep("q2", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -156,61 +171,83 @@ use_counts <- use_counts[total_package > 0,]
 
 df1<-melt(use_counts,id.vars='package',variable_name='response')
 
-g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!="Don't remember"])))
+g<-unlist(by(df1, df1$package, function(x) sum(x$value)))
 
+color.pallete<-brewer.pal(5,'YlGnBu')
+color.pallete[1]<-'lightgray'
 df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
-
-plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c(brewer.pal(4,'Set2'),'lightgray'))
-
+df1$response<-factor(df1$response,levels=rev(c('Excellent','Good','Basic','Not enough',"Don't remember")))
+plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + ylab('count') +coord_flip() + 
+scale_fill_manual(values=color.pallete) +theme_classic() +
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=15),
+        legend.text=element_text(size=16),
+        legend.title=element_blank())
 plot_use
-
 ```
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
 
-$\textit{Hey Matt, I need help to improve this plot. Starting with putting don't remember at the end of the plot. Kind of like 'Never' in the previous question. I don't know if this will look good, since it will not be filled with gray equally here. But we should try.}$
+*Hey Matt, I need help to improve this plot. Starting with putting don't remember at the end of the plot. Kind of like 'Never' in the previous question. I don't know if this will look good, since it will not be filled with gray equally here. But we should try.*
 
-$\textit{Also, how can I enumerate the figures and cite these numbers in the text?}$
+*Also, how can I enumerate the figures and cite these numbers in the text?*
+```{r useage counts,  echo=FALSE}
+df2<-use_counts[,c("Not enough","Basic","Good","Excellent")]
 
+use_per<-df2/apply(df2,1,sum)*100
+use_per$good_excellent<-signif(apply(use_per[,c('Good','Excellent')],1,sum),4)
+use_per$counts<-apply(df2[,c('Good','Excellent')],1,sum)
+```
 Remember that participants could only give their opinion on documentation regarding the packages they had used, so the packages with many users got many documentation answers. The figure below allows for a closer look at the proportion of type of response for each package; though the number of absolute responses (Fig. above) should not be disregarded. 
 
-To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the 'Don't remember'). These are 27 (you can see the table of responses here - \textit{link}). Among them, $\texttt{momentuHMM}$ had more than 50% of the responses (19) as "excellent documentation", meaning that the documentation was so good that thanks to it, the users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": $\texttt{momentuHMM}$ (93.8%; 30), $\texttt{moveHMM}$ (89.5%; 51), $\texttt{adehabitatLT}$ (88.6%; 124), $\texttt{adehabitatHS}$ (86.0%, 87), $\texttt{adehabitatHR}$ (83.2%; 139), $\texttt{EMbC}$ (81.8%; 18), $\texttt{wildlifeDI}$ (81.3%; 18), $\texttt{ctmm}$ (80.0%; 32), $\texttt{GeoLight}$ (77.8%; 21), $\texttt{move}$ (76.6%; 49), $\texttt{recurse}$ (76.5; 13).  
+To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the 'Don't remember'). These are 27 (you can see the table of responses [here](hyperlink)). Among them, *momentuHMM* had more than 50% of the responses (19) as "excellent documentation", meaning that the documentation was so good that thanks to it, the users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": *momentuHMM* (`r use_per['momentuHMM','good_excellent']`%; `r use_per['momentuHMM','counts']`), *moveHMM* (`r use_per['moveHMM','good_excellent']`%; `r use_per['moveHMM','counts']`), *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`), *adehabitatHS* (`r use_per['adehabitatHS','good_excellent']`%; `r use_per['adehabitatHS','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), *EMbC* (`r use_per['EMbC','good_excellent']`%; `r use_per['EMbC','counts']`), *wildlifeDI* (`r use_per['wildlifeDI','good_excellent']`%; `r use_per['wildlifeDI','counts']`), *ctmm* (`r use_per['ctmm','good_excellent']`%; `r use_per['ctmm','counts']`), *GeoLight* (`r use_per['GeoLight','good_excellent']`%; `r use_per['GeoLight','counts']`), *move* (`r use_per['move','good_excellent']`%; `r use_per['move','counts']`), *recurse* (`r use_per['recurse','good_excellent']`%; `r use_per['recurse','counts']`).  
 
 
-```{r, echo=FALSE, message=F}
-use_counts_df <- use_counts[,-c(5:6)]
-total_package <- rowSums(use_counts_df)
-use_counts_df <- use_counts_df/total_package
-use_counts_df$package<-row.names(use_counts)
-use_counts_df <- use_counts_df[which(total_package>0),]
+```{r documentation percentage, echo=FALSE, message=F, fig.width=16, fig.height=10}
 
-# use_counts[which(use_counts_df$Excellent>0.5 & total_package >= 10),]
-# Good_Exc <- use_counts_df$Good + use_counts_df$Excellent
-# Good_Exc_abs <- use_counts$Good + use_counts$Excellent
-# use_counts_2 <- cbind.data.frame(use_counts,Good_Exc_abs,Good_Exc)
-# test <- use_counts_2[which(Good_Exc>0.75 & total_package >= 10) ,]
-# test[order(test$Good_Exc,decreasing=TRUE),]
+package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Excellent, use_per$Good),])
 
-df1<-melt(use_counts_df,id.vars='package',variable_name='response')
-
-g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!="Don't remember"])))
-
-df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
-
-plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=c(brewer.pal(4,'Set2'),'lightgray'))
-
-plot_use
+use_per2<-use_per
+use_per2[is.na(use_per2)]<-0
+use_per2$package<-row.names(use_per2)
+use_per2<-subset(use_per2,counts>5)
+df1<-melt(subset(use_per2,select=-c(good_excellent,counts)),id.vars='package',variable_name='response')
+df1$package<-factor(df1$package, levels=package_levels)
 
 
+#df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
+df1$response<-factor(df1$response,levels=rev(c('Excellent','Good','Basic','Not enough')))
+color.pallete<-brewer.pal(4,'YlGnBu')
+color.pallete[1:2]<-c('lightgray','darkgray')
+#color.pallete[1]<-c('lightgray')
+ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response))  + ylab('percentage') +coord_flip() + 
+  scale_fill_manual(values=color.pallete) +theme_classic() +
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=15),
+        legend.text=element_text(size=16),
+        legend.title=element_blank())
 ```
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
 
-$\textit{I need help with the same thing here, and to sort the packages ordered by the percentage of excellent (just to try how it looks)}$.
+*I need help with the same thing here, and to sort the packages ordered by the percentage of excellent (just to try how it looks)*.
 
-If you want to check the numbers for your favorite package, the complete table is here: $\textit{(Matt, could we make a link to this table instead of publishing it directly here?)}$
+If you want to check the numbers for your favorite package, the complete table is [here](make another page for just the table)
+*(Matt, could we make a link to this table instead of publishing it directly here?)*
 
-
-```{r, echo=FALSE, message=F}
-kable(use_counts[,1:length(categories)])
+<!--
+```{r documentation table, echo=FALSE, message=F}
+kable(use_counts[,1:length(categories)])%>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
-
+-->
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
 ## Package Revelance
 
 Participants were asked how relevant was each of the packages they use for their work. They had to answer using one of the following options:
@@ -220,7 +257,7 @@ Participants were asked how relevant was each of the packages they use for their
 * Important: "It's important for the core of my work, but if it didn't exist, there are other packages or solutions to obtain something similar" 
 * Essential: "I wouldn't have done the key part of my work without this package"
 
-```{r, echo=FALSE, message=F}
+```{r importance, echo=FALSE, message=F, fig.width=16, fig.height=15}
 data_question <- data_all[,grep("q3", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -242,50 +279,68 @@ use_counts <- use_counts[total_package > 0,]
 
 df1<-melt(use_counts,id.vars='package',variable_name='response')
 
-g<-unlist(by(df1, df1$package, function(x) sum(x$value[x$response!="Don't remember"])))
+g<-unlist(by(df1, df1$package, function(x) sum(x$value)))
 
+color.pallete<-brewer.pal(5,'YlGnBu')
+color.pallete[1]<-'lightgray'
 df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
 
-plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=brewer.pal(4,'Set2'))
-
-plot_use
+df1$response<-factor(df1$response,levels=rev(c('Essential','Important','Slightly relevant','Not relevant')))
+ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + 
+  ylab('count') +coord_flip() + 
+  scale_fill_manual(values=color.pallete) +theme_classic() +
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=16),
+        legend.text=element_text(size=16),
+        legend.title=element_blank())
 
 ```
+<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
+#"caption hover over")<span class="image-caption">caption comments</span>
+-->
+```{r importance counts,  echo=FALSE}
+df2<-use_counts[,c("Not relevant","Slightly relevant","Important","Essential")]
 
+use_per<-df2/apply(df2,1,sum)*100
+use_per$good_excellent<-signif(apply(use_per[,c('Important','Essential')],1,sum),4)
+use_per$counts<-apply(df2[,c('Important','Essential')],1,sum)
+```
 The two barplots show the absolute and relative frequency of the answers for each package, respectively.
-We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: $\texttt{adehabitatHR}$ (81.1%; 150), $\texttt{adehabitatLT}$ (75.2%; 118) and $\texttt{bsam}$ (81.5%; 22). 
+We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: *bsam* (`r use_per['bsam','good_excellent']`%; `r use_per['bsam','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), and *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`). 
 
-```{r, echo=FALSE, message=F}
-use_counts_df <- use_counts[,-c(5)]
-total_package <- rowSums(use_counts_df)
-use_counts_df <- use_counts_df/total_package
-use_counts_df$package<-row.names(use_counts)
-use_counts_df <- use_counts_df[which(total_package>0),]
+```{r importance percentage, echo=FALSE, message=F,fig.width=16, fig.height=10}
 
-# use_counts[which(use_counts_df$Essential>0.5 & total_package >= 10),]
-# Good_Exc <- use_counts_df$Important + use_counts_df$Essential
-# Good_Exc_abs <- use_counts$Important + use_counts$Essential
-# use_counts_2 <- cbind.data.frame(use_counts,Good_Exc_abs,Good_Exc)
-# test <- use_counts_2[which(Good_Exc>0.75 & total_package >= 10) ,]
-# test[order(test$Good_Exc,decreasing=TRUE),]
+package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Essential, use_per$Important),])
 
-df1<-melt(use_counts_df,id.vars='package',variable_name='response')
-df1$package<-factor(df1$package,levels=names(sort(g,decreasing=F)))
-
-plot_use <- ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + theme(axis.text.y = element_text( hjust = 1,size=12,vjust=0.25)) + ylab('count') +coord_flip() + scale_fill_manual(values=brewer.pal(4,'Set2'))
-
-plot_use
-
-
+use_per2<-use_per
+use_per2[is.na(use_per2)]<-0
+use_per2$package<-row.names(use_per2)
+use_per2<-subset(use_per2,counts>5)
+df1<-melt(subset(use_per2,select=-c(good_excellent,counts)),id.vars='package',variable_name='response')
+df1$package<-factor(df1$package, levels=package_levels)
+df1$response<-factor(df1$response,levels=c("Not relevant","Slightly relevant","Important","Essential"))
+color.pallete<-brewer.pal(4,'YlGnBu')
+color.pallete[1:2]<-c('lightgray','darkgray')
+#color.pallete[1]<-c('lightgray')
+ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) + 
+  ylab('percentage') +coord_flip() + 
+  scale_fill_manual(values=color.pallete) +theme_classic() +
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=15),
+        legend.text=element_text(size=16),
+        legend.title=element_blank())
 ```
 
-If you want to check the numbers for your favorite package, the complete table is here: $\textit{(Matt, could we make a link to this table instead of publishing it directly here?)}$
+If you want to check the numbers for your favorite package, the complete table is [here](hyperlink) *(Matt, could we make a link to this table instead of publishing it directly here?)*
 
-
+<!--
 ```{r, echo=FALSE, message=F}
-kable(use_counts[,1:length(categories)])
+kable(use_counts[,1:length(categories)])%>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
-
+--> 
 ## Survey representativity
 
 To get a rough idea of how representative the survey was of the population of the package users, we compared the number of participants that used each package to the number of monthly downloads that each package has. 
@@ -299,11 +354,7 @@ A log-log plot for both metrics is shown in the figure below.
 
 
 
-```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE}
-
-
-## Crossing user counts with downloads
-
+```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=16, fig.height=16}
 data_question <- data_all[,grep("q1", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -333,17 +384,20 @@ matrix_fun <- matrix_fun[(!is.na(matrix_fun$monthly.downloads)),]
 # discarding the packages we did not get users from:
 # matrix_fun_2 <- matrix_fun[matrix_fun$users > 0,] # missing: "GGIR"             "nparACT"          "PhysicalActivity" "smam"
 # matrix_fun_3 <- matrix_fun[matrix_fun$Use_Counts >= 10,]
-theme1<-function() {theme(text = element_text(size=10),axis.text.x = element_text(angle=0, hjust=0),legend.position = "none")}
+
 ggplot(matrix_fun,aes(x=users, y=monthly.downloads)) +
-  geom_point(size=2) +
+  geom_point(size=5) +
   xlab('Number of users') + ylab("Monthly downloads") +
-  geom_text_repel(label=matrix_fun$Package,  segment.size=0.6,force=3,segment.alpha=.25,hjust=0,box.padding=0.5,min.segment.length=.1,size=2.7, direction = "both") +
+  geom_text_repel(label=matrix_fun$Package,  segment.size=0.6,force=3,segment.alpha=.5,hjust=0,box.padding=0.5,min.segment.length=.1,size=6, direction = "both") +
   scale_x_continuous(trans='log10')+
-  scale_y_continuous(trans='log10') + theme_classic() + theme1()
+  scale_y_continuous(trans='log10') +theme_classic() +
+  theme(axis.text.y = element_text( hjust = 1,vjust=0.5),
+        axis.title =element_text(size=24),
+        axis.text =element_text(size=15))
 # cor(matrix_fun$users,matrix_fun$monthly.downloads,use="pairwise.complete.obs")
 # cor(matrix_fun_2$users,matrix_fun_2$monthly.downloads,use="pairwise.complete.obs")
 ```
 
-\textit{Matt, please help making the graph prettier. All of them, actually}
+*Matt, please help making the graph prettier. All of them, actually*
 
 ## Summary 
