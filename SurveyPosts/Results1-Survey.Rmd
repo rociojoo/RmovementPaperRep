@@ -190,9 +190,6 @@ plot_use
 #"caption hover over")<span class="image-caption">caption comments</span>
 -->
 
-*Hey Matt, I need help to improve this plot. Starting with putting don't remember at the end of the plot. Kind of like 'Never' in the previous question. I don't know if this will look good, since it will not be filled with gray equally here. But we should try.*
-
-*Also, how can I enumerate the figures and cite these numbers in the text?*
 ```{r useage counts,  echo=FALSE}
 df2<-use_counts[,c("Not enough","Basic","Good","Excellent")]
 
@@ -233,11 +230,7 @@ ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response))  + ylab('perc
 <!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
 #"caption hover over")<span class="image-caption">caption comments</span>
 -->
-
-*I need help with the same thing here, and to sort the packages ordered by the percentage of excellent (just to try how it looks)*.
-
 If you want to check the numbers for your favorite package, the complete table is [here](make another page for just the table)
-*(Matt, could we make a link to this table instead of publishing it directly here?)*
 
 <!--
 ```{r documentation table, echo=FALSE, message=F}
@@ -354,7 +347,7 @@ A log-log plot for both metrics is shown in the figure below.
 
 
 
-```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=16, fig.height=16}
+```{r, eval=TRUE,echo=FALSE,message=FALSE,warning=FALSE,fig.width=16, fig.height=15}
 data_question <- data_all[,grep("q1", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -397,7 +390,5 @@ ggplot(matrix_fun,aes(x=users, y=monthly.downloads)) +
 # cor(matrix_fun$users,matrix_fun$monthly.downloads,use="pairwise.complete.obs")
 # cor(matrix_fun_2$users,matrix_fun_2$monthly.downloads,use="pairwise.complete.obs")
 ```
-
-*Matt, please help making the graph prettier. All of them, actually*
 
 ## Summary 
