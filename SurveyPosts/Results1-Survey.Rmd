@@ -24,21 +24,26 @@ data_all <- data %>%
 
 packages <- read_csv('packages_survey_names.csv')
 ```
-## A large amount of R packages for movement and the need for a survey
+<!-- ## A large amount of R packages for movement and the need for a survey -->
 
-The use of tracking devices is increasing as a consequence of the development of new and cheaper loggers. With large amounts of available data, more sophisticated tools to process, visualize and analyze data are being developed. One of the most used programming softwares for this matter is the free open source R software. We have identified more than 70 R packages created for that purpose! The large amount of existent packages makes it difficult to keep track of the spectrum of choices. For that reason, we aimed at assessing the current state of the art of the movement-related R packages regarding
+In a recent post <!--- Need link -->, we introduced the pre-print of our review of R packages for movement. R is one of the most used programming softwares to process, visualize and analyze data from tracking devices. The large amount of existing packages makes it difficult to keep track of the spectrum of choices. Our review aimed at an objective introduction to the packages organized by the type of processing or analyzing they focused on, and to provide feedback to developers from a user perspective. For the second objective, we elaborated a survey for package users regarding 
 
     1. How popular those packages are; 
     2. How well documented they are; 
     3. How relevant they are for users. 
     
-Those were the three questions that we asked about the packages, plus one about the level as an R user of the survey participant. We will go to the details of each question later in this post. 
+<!-- Those were the three questions that we asked about the packages, plus one about the level as an R user of the survey participant. We will go to the details of each question later in this post.  -->
+
+In the review we showed results regarding package documentation. In this post you'll find the complete results of the survey. 
 
 ## Packages included in the survey
 
-In theory, any package could be potentially useful for movement analysis; either a time series package, a spatial analysis one or even *ggplot2* to make more beautiful graphics! For this survey, we considered only packages created with the main purpose of 1) processing or analyzing data obtained from devices used to track organisms, or 2) analyze tracking data in general. Tracking data would have space and time components, i.e. at least (x,y,t), or assuming t as a general index in regular steps. 
+In theory, any package could be potentially useful for movement analysis; either a time series package, a spatial analysis one or even *ggplot2* to make more beautiful graphics! For the [review](https://arxiv.org/abs/1901.05935), we considered only what we referred to as tracking packages. Tracking packages were those created to either analyze tracking data (i.e. (x, y, t)) or to transform data from tagging devices into proper tracking data. For instance, a package that would use accelerometer, gyroscope and magnetometer data to reconstruct an animal's trajectory via path integration, thus transforming those data into an (x,y,t) format, would fit into the definition. But a package analyzing accelerometry series to detect changes in behavior would not fit. 
 
-These packages are: *acc*, *accelerometry*, *adehabitatHR*, *adehabitatHS*, *adehabitatLT*, *amt*, *animalTrack*, *anipaths*, *argosfilter*, *argosTrack*, *BayesianAnimalTracker*, *BBMM*, *bcpa*, *bsam*, *caribou*, *crawl*, *ctmcmove*, *ctmm*, *diveMove*, *drtracker*, *EMbC*, *feedR*, *FLightR*, *GeoLight*, *GGIR*, *hab*, *HMMoce*, *Kftrack*, *m2b*, *marcher*, *migrateR*, *mkde*, *momentuHMM*, *move*, *moveHMM*, *movement*, *movementAnalysis*, *moveNT*, *moveVis*, *moveWindSpeed*, *nparACT*, *pathtrackr*, *pawacc*, *PhysicalActivity*, *probgls*, *rbl*, *recurse*, *rhr*, *rpostgisLT*, *rsMove*, *SDLfilter*, *SGAT/TripEstimation*, *sigloc*, *SimilarityMeasures*, *SiMRiv*, *smam*, *SwimR*, *T-LoCoH*, *telemetr*, *trackdem*, *trackeR*, *Trackit*, *TrackReconstruction*, *TrajDataMining*, *trajectories*, *trip*, *TwGeos/BAStag*, *TwilightFree*, *Ukfsst/kfsst*, *VTrack* and *wildlifeDI*.
+For this survey, we added packages that, though not analyzing tracking data, they were created to process or analyze data extracted from tracking devices in other formats (e.g. *accelerometry* for accelerometry data, *diveMove* for time-depth recorders or *pathtrackr* for video tracking data). A couple of packages that, were finally discarded from the review because of either being in early stages of development (*movement*) or because of being removed from CRAN due to unfixed problems (*sigloc*), were included in the survey. 
+<!-- For this survey, we considered only packages created with the main purpose of 1) processing or analyzing data obtained from devices used to track organisms, or 2) analyze tracking data in general. Tracking data would have space and time components, i.e. at least (x,y,t), or assuming t as a general index in regular steps.  -->
+
+A total of 72 packages were included in this survey: *acc*, *accelerometry*, *adehabitatHR*, *adehabitatHS*, *adehabitatLT*, *amt*, *animalTrack*, *anipaths*, *argosfilter*, *argosTrack*, *BayesianAnimalTracker*, *BBMM*, *bcpa*, *bsam*, *caribou*, *crawl*, *ctmcmove*, *ctmm*, *diveMove*, *drtracker*, *EMbC*, *feedR*, *FLightR*, *GeoLight*, *GGIR*, *hab*, *HMMoce*, *Kftrack*, *m2b*, *marcher*, *migrateR*, *mkde*, *momentuHMM*, *move*, *moveHMM*, *movement*, *movementAnalysis*, *moveNT*, *moveVis*, *moveWindSpeed*, *nparACT*, *pathtrackr*, *pawacc*, *PhysicalActivity*, *probgls*, *rbl*, *recurse*, *rhr*, *rpostgisLT*, *rsMove*, *SDLfilter*, *SGAT/TripEstimation*, *sigloc*, *SimilarityMeasures*, *SiMRiv*, *smam*, *SwimR*, *T-LoCoH*, *telemetr*, *trackdem*, *trackeR*, *Trackit*, *TrackReconstruction*, *TrajDataMining*, *trajectories*, *trip*, *TwGeos/BAStag*, *TwilightFree*, *Ukfsst/kfsst*, *VTrack* and *wildlifeDI*.
 
 Packages from any public repository (e.g. CRAN, GitHub, R-forge) were included in the survey. Packages created for eye, computer-mouse or fishing vessel movement were not considered here (but you are welcome to make your own survey about them!). 
 
@@ -48,8 +53,7 @@ Note: *trajr* was added to the survey in a late stage, but because of that, and 
 
 The survey was designed to be completely anonymous, meaning that we had no way to know who participated and not even the date of participation was saved. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the [mablab website](http://mablab.org). 
 
-
-It got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
+The survey got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
 
 `r data %>% filter(!is.na(completion)) %>% nrow()` people participated in the survey, and `r data %>% filter(completion==100) %>% nrow()` answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
 
@@ -93,7 +97,7 @@ Most participants considered themselves in an intermediate level (`r prop[2]` %)
 
 The first question about package use was: How often do you use each of these packages? (Never, Rarely, Sometimes, Often)
 
-The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. On the bottom of the graphic, *smam* (for animal movement models), *PhysicalActivity*, *nparACT*, *GGIR* (these three for accelerometry data on human patients) and *feedr* (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
+The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. These packages provide a collection of tools to estimate home range, perform simple trajectory analysis and analyze habitat selection, respectively. On the bottom of the graphic, *smam* (for animal movement models), *PhysicalActivity*, *nparACT*, *GGIR* (these three for accelerometry data on human patients) and *feedr* (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
 
 ```{r relevance, echo=FALSE, message=F, fig.width=16, fig.height=15, fig.cap="Figure 2. Package use"}
 data_question <- data_all[,grep("q1", colnames(data_all))]
@@ -201,10 +205,10 @@ use_per$counts<-apply(df2[,c('Good','Excellent')],1,sum)
 ```
 Remember that participants could only give their opinion on documentation regarding the packages they had used. Hence, the packages with many users got many documentation answers (Fig. 1 and 3). Figure 4 allows for a closer look at the proportion of type of response for each package. 
 
-To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the "Don't remember"). These are 27 (you can see the table of responses [here](hyperlink)). Among them, *momentuHMM* had more than 50% of the responses (`r round(use_per['momentuHMM','Excellent'],2)`%; `r use_counts['momentuHMM','Excellent']`) as "excellent documentation", meaning that the documentation was so good that thanks to it, more than half of its users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": *momentuHMM* (`r use_per['momentuHMM','good_excellent']`%; `r use_per['momentuHMM','counts']`), *moveHMM* (`r use_per['moveHMM','good_excellent']`%; `r use_per['moveHMM','counts']`), *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`), *adehabitatHS* (`r use_per['adehabitatHS','good_excellent']`%; `r use_per['adehabitatHS','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), *EMbC* (`r use_per['EMbC','good_excellent']`%; `r use_per['EMbC','counts']`), *wildlifeDI* (`r use_per['wildlifeDI','good_excellent']`%; `r use_per['wildlifeDI','counts']`), *ctmm* (`r use_per['ctmm','good_excellent']`%; `r use_per['ctmm','counts']`), *GeoLight* (`r use_per['GeoLight','good_excellent']`%; `r use_per['GeoLight','counts']`), *move* (`r use_per['move','good_excellent']`%; `r use_per['move','counts']`), *recurse* (`r use_per['recurse','good_excellent']`%; `r use_per['recurse','counts']`).  
+To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the "Don't remember"). These are 27 (you can see the table of responses [here](hyperlink)). Among them, *momentuHMM* had more than 50% of the responses (`r round(use_per['momentuHMM','Excellent'],2)`%; `r use_counts['momentuHMM','Excellent']`) as "excellent documentation", meaning that the documentation was so good that thanks to it, more than half of its users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": *momentuHMM* (`r use_per['momentuHMM','good_excellent']`%; `r use_per['momentuHMM','counts']`), *moveHMM* (`r use_per['moveHMM','good_excellent']`%; `r use_per['moveHMM','counts']`), *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`), *adehabitatHS* (`r use_per['adehabitatHS','good_excellent']`%; `r use_per['adehabitatHS','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), *EMbC* (`r use_per['EMbC','good_excellent']`%; `r use_per['EMbC','counts']`), *wildlifeDI* (`r use_per['wildlifeDI','good_excellent']`%; `r use_per['wildlifeDI','counts']`), *ctmm* (`r use_per['ctmm','good_excellent']`%; `r use_per['ctmm','counts']`), *GeoLight* (`r use_per['GeoLight','good_excellent']`%; `r use_per['GeoLight','counts']`), *move* (`r use_per['move','good_excellent']`%; `r use_per['move','counts']`), *recurse* (`r use_per['recurse','good_excellent']`%; `r use_per['recurse','counts']`). The two leading packages, *momentuHMM* and *moveHMM*, focus on the use of Hidden Markov models which allow identifying different patterns of behavior called states. 
 
 
-```{r documentation percentage, echo=FALSE, message=F, fig.width=16, fig.height=10, fig.cap="Figure 4. Bar plots of relative frequency of each category of package documentation"}
+```{r documentation percentage, echo=FALSE, message=F, fig.width=16, fig.height=10, fig.cap="Figure 4. Bar plots of relative frequency of each category of package documentation (for packages with more than 5 users)"}
 
 package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Excellent, use_per$Good),])
 
@@ -302,9 +306,9 @@ use_per$good_excellent<-signif(apply(use_per[,c('Important','Essential')],1,sum)
 use_per$counts<-apply(df2[,c('Important','Essential')],1,sum)
 ```
 The two barplots show the absolute and relative frequency of the answers for each package, respectively.
-We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: *bsam* (`r use_per['bsam','good_excellent']`%; `r use_per['bsam','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), and *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`). 
+We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: *bsam* (`r use_per['bsam','good_excellent']`%; `r use_per['bsam','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), and *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`). *bsam* allows fitting Bayesian state-space models to animal tracking data. 
 
-```{r importance percentage, echo=FALSE, message=F,fig.width=16, fig.height=10, fig.cap="Figure 6. Bar plots of relative frequency of each category of package relevance"}
+```{r importance percentage, echo=FALSE, message=F,fig.width=16, fig.height=10, fig.cap="Figure 6. Bar plots of relative frequency of each category of package relevance (for packages with more than 5 users)"}
 
 package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Essential, use_per$Important),])
 
@@ -393,3 +397,13 @@ ggplot(matrix_fun,aes(x=users, y=monthly.downloads)) +
 ```
 
 ## Summary 
+
+* Most packages had very few users among the participants. The vast landscape of packages could be leading users to: 1) rely on the "old" packages (adehabitat) that gather most functions for common analyses in movement and 2) search for other packages when doing other specific analyses. Moreover, many packages contain functions that other packages have implemented too (see more details in the [review](https://arxiv.org/abs/1901.05935)), so repetition could make users spread between packages. 
+
+* After the adehabitat packages, several packages for modeling animal movement (*momentuHMM*, *moveHMM*, *crawl* and *ctmm*) showed to be very popular, which could be an indicator of an increase in research on movement models. 
+
+* Few of the packages had remarkably good documentation (>75% of "good" or "excellent" documentation), and, on the other end of the spectrum, a couple of packages got less than 50% of "good" or "excellent" rates. 
+
+* Most packages were relevant for the work of their users, which is a positive feature!
+
+* More analyses on the survey in the next post. Stay tuned!

@@ -17,7 +17,7 @@ We defined the tracking packages as those created to either analyze tracking dat
 
 We prepared the review as an introduction to this set of packages for researchers, and to provide feedback and recommendations to package developers, from a user perspective. We described each package based on a workflow centered around tracking data, broken down in three stages: pre-processing, post-processing, and analysis (data visualization, track description, path reconstruction, behavioral pattern identification, space use characterization, trajectory simulation and others).
 
-Supporting documentation is key to the accessibility of a package for users. Based on a user survey, we reviewed the quality of packages' documentation, and identified 12 packages with good or excellent documentation.
+Supporting documentation is key to the accessibility of a package for users. Based on a user survey, we reviewed the quality of packages' documentation, and identified 12 packages with good or excellent documentation. (Disclaimer: the results of the survey here as also preliminary. See next posts about the survey here <!---  need link --> .)
 
 Links between packages were assessed through a network graph analysis. Although a large group of packages shows some degree of connectivity (either depending on functions or suggesting the use of another tracking package), a third of tracking packages work on isolation, reflecting a fragmentation in the R Movement-Ecology programming community.
 
