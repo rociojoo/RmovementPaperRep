@@ -48,6 +48,7 @@ Note: *trajr* was added to the survey in a late stage, but because of that, and 
 
 The survey was designed to be completely anonymous, meaning that we had no way to know who participated and not even the date of participation was saved. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the [mablab website](http://mablab.org). 
 
+
 It got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
 
 `r data %>% filter(!is.na(completion)) %>% nrow()` people participated in the survey, and `r data %>% filter(completion==100) %>% nrow()` answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
@@ -126,11 +127,11 @@ color.pallete[1]<-'lightgray'
         legend.title=element_blank())
 
 ```
-<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
-#"caption hover over")<span class="image-caption">caption comments</span>
+<!---<span class="image-caption">caption comments</span>
 -->
 
 If you want to check the numbers for your favorite package, the complete table is [here](make another page for just the table)
+
 <!--
 ```{r relevance table, echo=FALSE, message=F}
 kable(use_counts[,1:length(categories)]) %>%
@@ -290,9 +291,9 @@ ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) +
         legend.title=element_blank())
 
 ```
-<!---[caption comments](/raccoons/img/2019-01-13_skull-dentition_S.jpg
-#"caption hover over")<span class="image-caption">caption comments</span>
+<!---<span class="image-caption">caption comments</span>
 -->
+
 ```{r importance counts,  echo=FALSE}
 df2<-use_counts[,c("Not relevant","Slightly relevant","Important","Essential")]
 
@@ -327,7 +328,7 @@ ggplot(data=df1) + geom_col(aes(x=package, y=value,fill=response)) +
         legend.title=element_blank())
 ```
 
-If you want to check the numbers for your favorite package, the complete table is [here](hyperlink) *(Matt, could we make a link to this table instead of publishing it directly here?)*
+If you want to check the numbers for your favorite package, the complete table is [here](hyperlink)
 
 <!--
 ```{r, echo=FALSE, message=F}
@@ -363,7 +364,6 @@ use_counts <- t(sapply(1:ncol(data_question),function(x){
 use_counts<-data.frame(use_counts)
 colnames(use_counts) <- categories
 rownames(use_counts) <- t(packages_new)
-# total_package <- rowSums(use_counts)
 use_counts$Package<-row.names(use_counts)
 use_counts <- use_counts %>% 
   mutate(users = Rarely + Sometimes + Often)
