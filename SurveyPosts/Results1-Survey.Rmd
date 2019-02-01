@@ -17,7 +17,7 @@ library(dplyr)
 library(reshape)
 library(RColorBrewer)
 library(kableExtra)
-setwd('~/r_programs/RmovementPaperRep/SurveyPosts')
+# setwd('~/r_programs/RmovementPaperRep/SurveyPosts')
 data <- read.csv("survey_responses_20190130.csv",stringsAsFactors = FALSE) 
 data_all <- data %>% 
   filter(completion == 100)
@@ -46,7 +46,7 @@ Note: *trajr* was added to the survey in a late stage, but because of that, and 
 
 ## Participation in the survey
 
-The survey was designed to be completely anonymous, meaning that we had no way to know who participated and not even the date of participation was saved. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the mablab website: \url{http://mablab.org}. 
+The survey was designed to be completely anonymous, meaning that we had no way to know who participated and not even the date of participation was saved. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the [mablab website](http://mablab.org). 
 
 It got exemption from the Institutional Review Board at University of Florida. IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250.
 
@@ -64,7 +64,7 @@ Let's see first the level of use in R of the participants. The options were:
 * Advanced: You commonly use version control or contribute to develop packages.
 
 
-```{r User experience, echo=FALSE, message=F, fig.width=14, fig.height=10}
+```{r User experience, echo=FALSE, message=F, fig.width=14, fig.height=10, fig.cap=paste("Figure 1. Level of R use")}
 #knitr::opts_chunk$set(echo = TRUE,fig.width=16, fig.height=8)
 
 ### 4. R user
@@ -94,7 +94,7 @@ The first question about package use was: How often do you use each of these pac
 
 The bar graphics below show that most packages were unknown (or at least had never been used) by the survey participants. The adehabitat packages (HR, LT and HS) were the most used packages. On the bottom of the graphic, *smam* (for animal movement models), *PhysicalActivity*, *nparACT*, *GGIR* (these three for accelerometry data on human patients) and *feedr* (to handle radio telemetry data) had no users among the participants. For that reason, those 5 packages will not appear in the analysis of the next questions. 
 
-```{r relevance, echo=FALSE, message=F, fig.width=16, fig.height=15}
+```{r relevance, echo=FALSE, message=F, fig.width=16, fig.height=15, fig.cap="Figure 2. Package use"}
 data_question <- data_all[,grep("q1", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -137,6 +137,7 @@ kable(use_counts[,1:length(categories)]) %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 -->
+
 ### Package documentation
 
 Without proper user testing and peer editing, package documentation can lead to large gaps of understanding and limited usefulness of the package. If functions and workflows are not expressly defined, a package’s capacity to help users is undermined. 
@@ -149,7 +150,7 @@ In this survey we asked the participants how helpful was the documentation provi
 * Excellent: "I ended up doing even more than what I planned because of the excellent information in the documentation"
 * Don't remember: "I honestly can't remember…"
 
-```{r documentation, echo=FALSE, message=F, fig.width=16, fig.height=15}
+```{r documentation, echo=FALSE, message=F, fig.width=16, fig.height=15, fig.cap="Figure 3. Bar plots of absolute frequency of each category of package documentation"}
 data_question <- data_all[,grep("q2", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -197,12 +198,12 @@ use_per<-df2/apply(df2,1,sum)*100
 use_per$good_excellent<-signif(apply(use_per[,c('Good','Excellent')],1,sum),4)
 use_per$counts<-apply(df2[,c('Good','Excellent')],1,sum)
 ```
-Remember that participants could only give their opinion on documentation regarding the packages they had used, so the packages with many users got many documentation answers. The figure below allows for a closer look at the proportion of type of response for each package; though the number of absolute responses (Fig. above) should not be disregarded. 
+Remember that participants could only give their opinion on documentation regarding the packages they had used. Hence, the packages with many users got many documentation answers (Fig. 1 and 3). Figure 4 allows for a closer look at the proportion of type of response for each package. 
 
-To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the 'Don't remember'). These are 27 (you can see the table of responses [here](hyperlink)). Among them, *momentuHMM* had more than 50% of the responses (19) as "excellent documentation", meaning that the documentation was so good that thanks to it, the users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": *momentuHMM* (`r use_per['momentuHMM','good_excellent']`%; `r use_per['momentuHMM','counts']`), *moveHMM* (`r use_per['moveHMM','good_excellent']`%; `r use_per['moveHMM','counts']`), *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`), *adehabitatHS* (`r use_per['adehabitatHS','good_excellent']`%; `r use_per['adehabitatHS','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), *EMbC* (`r use_per['EMbC','good_excellent']`%; `r use_per['EMbC','counts']`), *wildlifeDI* (`r use_per['wildlifeDI','good_excellent']`%; `r use_per['wildlifeDI','counts']`), *ctmm* (`r use_per['ctmm','good_excellent']`%; `r use_per['ctmm','counts']`), *GeoLight* (`r use_per['GeoLight','good_excellent']`%; `r use_per['GeoLight','counts']`), *move* (`r use_per['move','good_excellent']`%; `r use_per['move','counts']`), *recurse* (`r use_per['recurse','good_excellent']`%; `r use_per['recurse','counts']`).  
+To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the "Don't remember"). These are 27 (you can see the table of responses [here](hyperlink)). Among them, *momentuHMM* had more than 50% of the responses (`r round(use_per['momentuHMM','Excellent'],2)`%; `r use_counts['momentuHMM','Excellent']`) as "excellent documentation", meaning that the documentation was so good that thanks to it, more than half of its users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": *momentuHMM* (`r use_per['momentuHMM','good_excellent']`%; `r use_per['momentuHMM','counts']`), *moveHMM* (`r use_per['moveHMM','good_excellent']`%; `r use_per['moveHMM','counts']`), *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`), *adehabitatHS* (`r use_per['adehabitatHS','good_excellent']`%; `r use_per['adehabitatHS','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), *EMbC* (`r use_per['EMbC','good_excellent']`%; `r use_per['EMbC','counts']`), *wildlifeDI* (`r use_per['wildlifeDI','good_excellent']`%; `r use_per['wildlifeDI','counts']`), *ctmm* (`r use_per['ctmm','good_excellent']`%; `r use_per['ctmm','counts']`), *GeoLight* (`r use_per['GeoLight','good_excellent']`%; `r use_per['GeoLight','counts']`), *move* (`r use_per['move','good_excellent']`%; `r use_per['move','counts']`), *recurse* (`r use_per['recurse','good_excellent']`%; `r use_per['recurse','counts']`).  
 
 
-```{r documentation percentage, echo=FALSE, message=F, fig.width=16, fig.height=10}
+```{r documentation percentage, echo=FALSE, message=F, fig.width=16, fig.height=10, fig.cap="Figure 4. Bar plots of relative frequency of each category of package documentation"}
 
 package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Excellent, use_per$Good),])
 
@@ -250,7 +251,7 @@ Participants were asked how relevant was each of the packages they use for their
 * Important: "It's important for the core of my work, but if it didn't exist, there are other packages or solutions to obtain something similar" 
 * Essential: "I wouldn't have done the key part of my work without this package"
 
-```{r importance, echo=FALSE, message=F, fig.width=16, fig.height=15}
+```{r importance, echo=FALSE, message=F, fig.width=16, fig.height=15, fig.cap="Figure 5. Bar plots of absolute frequency of each category of package relevance"}
 data_question <- data_all[,grep("q3", colnames(data_all))]
 colnames(data_question) <- t(packages)
 # I'm dropping trajr that was added in the end and only got 1 response
@@ -302,7 +303,7 @@ use_per$counts<-apply(df2[,c('Important','Essential')],1,sum)
 The two barplots show the absolute and relative frequency of the answers for each package, respectively.
 We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: *bsam* (`r use_per['bsam','good_excellent']`%; `r use_per['bsam','counts']`), *adehabitatHR* (`r use_per['adehabitatHR','good_excellent']`%; `r use_per['adehabitatHR','counts']`), and *adehabitatLT* (`r use_per['adehabitatLT','good_excellent']`%; `r use_per['adehabitatLT','counts']`). 
 
-```{r importance percentage, echo=FALSE, message=F,fig.width=16, fig.height=10}
+```{r importance percentage, echo=FALSE, message=F,fig.width=16, fig.height=10, fig.cap="Figure 6. Bar plots of relative frequency of each category of package relevance"}
 
 package_levels<-row.names(use_per[order(use_per$good_excellent,use_per$Essential, use_per$Important),])
 
@@ -341,7 +342,7 @@ To get a rough idea of how representative the survey was of the population of th
 
 The number of downloads were calculated using the R package cran.stats. It calculates the number of independent downloads by each package (substracting downloads by dependencies) by day. It only works for downloads using Rstudio, and for packages on CRAN. So for the tracking packages on CRAN, we computed the average of downloads per month, from September 2017 to August 2018; less months were considered for packages that were less than one year old. 
 
-There is no perfect match between the number of users and the number of downloads per package, but a correlation 0.85 for the 49 packages on CRAN, provides evidence of a good representativity of the users of tracking packages in the survey. 
+There is no perfect match between the number of users and the number of downloads per package, but a correlation 0.85 for the 49 packages on CRAN, provides evidence of an overall good representation of the users of tracking packages in the survey. Moreover, most of the packages with very few users in the survey regardless of their relatively high download statistics were accelerometry packages for human patients, which would be revealing that through Twitter and emails we did not reach that subpopulation of users. 
 
 A log-log plot for both metrics is shown in the figure below.  
 
