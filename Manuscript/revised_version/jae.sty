@@ -1,0 +1,156 @@
+%%% ========================================================= %%%
+%%% Package jae.sty                                           %%%
+%%% Mathieu Basille basille@ase-research.org                  %%%
+%%% 09.02.2011                                                %%%
+%%% ========================================================= %%%
+
+\ProvidesPackage{jae}
+
+%%% Encodage et police
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+%%% Package divers et langue
+\usepackage{graphicx, url, color, multirow, rotating, mdwlist}
+\usepackage[absolute]{textpos}
+\usepackage[french,british]{babel}
+%%% Mise en page : numérotation de toutes les lignes, interligne double
+\usepackage{lineno}
+  \linenumbers
+\usepackage{setspace}
+  \doublespacing
+\usepackage{fancyhdr}
+%%% Style de bibliographie adapté à JAE, gestion des \cite dans le texte
+\usepackage{natbib}
+  \bibliographystyle{jae}
+  % \bibpunct{(}{)}{,}{a}{}{,}
+
+
+%%% Nouvelles commandes pour le '\maketitle' : 
+%%% '\running' : Running head
+%%% '\nwords' : Number of words
+%%% '\ntables' : Number of tables
+%%% '\nfig' : Number of figures
+%%% '\nref' : Number of references
+%%% '\affiliations' : Affiliations, à placer dans des \item
+%%% '\corr' : Correspondance author (e-mail address)
+\newcommand{\@affiliations}{}
+\newcommand{\affiliations}[1]{\renewcommand{\@affiliations}{#1}}
+\newcommand{\@running}{}
+\newcommand{\running}[1]{\renewcommand{\@running}{#1}}
+\newcommand{\@nwords}{}
+\newcommand{\nwords}[1]{\renewcommand{\@nwords}{#1}}
+\newcommand{\@ntables}{}
+\newcommand{\ntables}[1]{\renewcommand{\@ntables}{#1}}
+\newcommand{\@nfig}{}
+\newcommand{\nfig}[1]{\renewcommand{\@nfig}{#1}}
+\newcommand{\@nref}{}
+\newcommand{\nref}[1]{\renewcommand{\@nref}{#1}}
+\newcommand{\@corr}{}
+\newcommand{\corr}[1]{\renewcommand{\@corr}{#1}}
+
+
+%%% Commande '\maketitle' modifiée pour prendre en compte \running, \nwords,
+%%% \affiliations, etc.
+% * A concise and informative title.
+% * A list of author names, affiliation(s), and e-mail addresses. 
+% * The name, complete mailing address (including e-mail address, telephone and fax numbers)
+% of the corresponding author. 
+% * A running title not exceeding 45 characters. 
+% * A word count of the entire paper broken down into summary, main text, acknowledgements,
+% references, tables and figure legends. 
+% * The number of tables and figures.
+% * The number of references.
+\renewcommand\maketitle{\begin{titlepage}%
+    \let\footnotesize\small
+    \let\footnoterule\relax
+    \let \footnote \thanks
+    \singlespacing%
+    \begin{textblock*}{10cm}(6cm,28cm)%
+      \textbf{Date of submission:} \@date% 
+    \end{textblock*}%
+    \begin{description*}%
+    \item[Running title:] \@running \par%
+    \item[Number of words:] $\sim$\@nwords \par%
+    \item[Number of tables:] \@ntables \par%
+    \item[Number of figures:] \@nfig \par%
+    \item[Number of references:] \@nref \par%
+    \end{description*}%
+    \vskip 3em%
+    \begin{center}%
+      {\Large \sffamily \bfseries \@title \par}% 
+      \vskip 3em%
+      {\large \sffamily \bfseries
+        \lineskip .75em%
+        \begin{tabular}[t]{c}%
+          \@author
+        \end{tabular}\par}%
+    \end{center}\par
+    \vskip 3em%
+    \begin{enumerate*}%
+      \sffamily \itshape%
+      \@affiliations%
+    \end{enumerate*}%
+    \vskip 1em%
+    {\sffamily \small *Correspondence author. \@corr}
+    \@thanks
+    \vfil\null
+  \end{titlepage}%
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}
+
+
+%%% Environnement 'thebibliography' en \small et \singlespacing
+\let\orig@thebibliography\thebibliography
+\let\endorig@thebibliography\endthebibliography
+\renewenvironment*{thebibliography}
+{\singlespacing%
+  \small%
+  \orig@thebibliography}%
+{\endorig@thebibliography}
+
+
+%%% Style des titres
+\renewcommand\section{\@startsection {section}{1}{\z@}%
+                                   {-3.5ex \@plus -1ex \@minus -.2ex}%
+                                   {2.3ex \@plus.2ex}%
+                                   {\sffamily\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalsize\textsc}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\sffamily\normalsize\itshape}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                    {3.25ex \@plus1ex \@minus.2ex}%
+                                    {-1em}%
+                                    {\normalfont\normalsize\bfseries}}
+\renewcommand\subparagraph{\@startsection{subparagraph}{5}{\parindent}%
+                                       {3.25ex \@plus1ex \@minus .2ex}%
+                                       {-1em}%
+                                      {\normalfont\normalsize\bfseries}}
+\renewcommand{\@makecaption}[2]{%
+  \vspace{10pt}{\textbf{#1}\hspace{15pt}#2}%
+}
+
+
+%%% Pour renommer figures / abstract
+\addto\captionsbritish{%
+  \renewcommand{\abstractname}%
+    {{\sf\bfseries Summary}}%
+}
+\addto\captionsbritish{%
+  \renewcommand{\figurename}%
+    {Fig.}%
+}
