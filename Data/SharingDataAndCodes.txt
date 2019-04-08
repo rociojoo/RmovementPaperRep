@@ -1,0 +1,21 @@
+Plan for stocking data and codes:
+
+Codes will be in GitHub repository:
+
+rociojoo/RmovementPaperRep
+
+everything in that repository will disappear except for some of the content in Data (which will be in the root)
+
+- data from survey: survey_responses_20190130.csv (Dryad; necessary for replicating results for documentation)
+- standardized names for packages: packages_survey_names.csv (GitHub; necessary for replicating results for documentation)
+- data with packages information: RmovementPackagesInformation-20190227.csv (Dryad; also necessary for replicating results for documentation)
+- list of packages reviewed in the paper: packages_paper.csv (GitHub; necessary for replicating results for documentation)
+- code for fig. 3 in the manuscript: ResultsDoc.R (needing all the files mentioned above)
+
+- code for fig. 4 in the manuscript: PackageNetwork.R
+- uses packages_paper.csv
+- data about imports and suggests: RmovePackages-ImportSuggest-20180830.csv (Dryad)
+- uses RmovementPackagesInformation-20190227.csv
+- data about imports only: RmovePackages-Import-20180830.csv (Dryad)
+
+
