@@ -5,7 +5,7 @@ library(dplyr)
 library(reshape)
 library(RColorBrewer)
 
-# loading the data from the survey
+# loading the data from the survey and filter only surveys that were complete
 data <- read.csv("survey_responses_20190130.csv",stringsAsFactors = FALSE) 
 data_all <- data %>% 
   filter(completion == 100)
@@ -13,6 +13,7 @@ data_all <- data %>%
 # standardizing names for packages
 packages <- read_csv('packages_survey_names.csv')
 
+# question 1
 data_question_1 <- data_all[,grep("q1", colnames(data_all))]
 colnames(data_question_1) <- t(packages)
 
@@ -58,6 +59,7 @@ matrix_fun <- left_join(use_counts,funciones)
 packages_paper <- read.csv("packages_paper.csv")
 matrix_fun <- inner_join(packages_paper,matrix_fun)
 
+# clarifying documentation options
 matrix_fun$documentation <- c("Manual")
 matrix_fun$documentation[matrix_fun$Vignettes == "Yes" & matrix_fun$Papers == "No"] <- c("Manual+Vignette")
 matrix_fun$documentation[matrix_fun$Vignettes == "Yes" & matrix_fun$Papers == "Yes"] <- c("Manual+Vignette+Paper")
@@ -72,7 +74,7 @@ theme1<-function() {theme(text = element_text(size=20),axis.text.x = element_tex
 
 
 ### Rating vs Package Use
-
+# Create a custom palette thats darker so its better for print quality
 color.pallete<-brewer.pal(3,'Dark2')
 COL2 <- col2rgb(color.pallete)
 COL2 <- COL2/1.25  # you can use of course other values than 2. Higher values the darker the output.
