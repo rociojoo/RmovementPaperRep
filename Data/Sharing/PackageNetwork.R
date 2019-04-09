@@ -89,7 +89,7 @@ line_type[edges_sugg$type == "dependency"] <- 1
 line_color <- rep(alpha("#ef8a62",0.5),length(E(g)))
 line_color[edges_sugg$type == "dependency"] <- alpha("#ef8a62",0.8)
 
-
+# General options for plotting. 
 V(g)$label.family <- "Helvetica"
 V(g)$label <- V(g)$name
 V(g)$degree <- degree(g)
