@@ -12,6 +12,7 @@ mov_pac[mov_pac == "SGAT/TripEstimation"] <- "SGAT"
 mov_pac[mov_pac == "TwGeos/BAStag"] <- "TwGeos"
 mov_pac[mov_pac == "ukfsst/kfsst"] <- "ukfsst"
 
+# Subsetting by packages in review
 ind.mov.pac <- match(mov_pac$Package,data$Package)
 data <- data[ind.mov.pac,]
 
