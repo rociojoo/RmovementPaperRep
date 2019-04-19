@@ -14,7 +14,7 @@ monthly downloads: using the package 'dlstats' on cran
 - Tracking-data Processing: if the package was created to do a specific type of data-processing or analysis. See Joo et al. (pre-print) https://arxiv.org/abs/1901.05935 for more information.
 - Define own-class: Yes if the package defines its own data class(es).
 - Data-class: If yes in last column, name main data classes.
-- Supporting sp or sf? Those are data classes. Possible values: No, sp, sf, both.
+- Supporting sp or sf? Those are data classes. Possible values: No, sp, sf, both. (Note: rpostgisLT imports sf but only for visualization functions; for its main purpose, it depends only on sp). 
 - Standard manual: Yes if the package offers standard documentation.
 - Vignettes: Yes if the package offers vignette(s).
 - Papers: Yes if there is a peer-reviewed scientific article published.
