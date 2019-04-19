@@ -6,7 +6,7 @@ library(reshape)
 library(RColorBrewer)
 
 # loading the data from the survey and filter only surveys that were complete
-data <- read.csv("survey_responses_20190130.csv",stringsAsFactors = FALSE) 
+data <- read.csv("Rpackages_survey_responses.csv",stringsAsFactors = FALSE) 
 data_all <- data %>% 
   filter(completion == 100)
 
@@ -49,7 +49,7 @@ use_counts$Package<-row.names(use_counts)
 use_counts <- use_counts[total_package > 0,]
 
 # Table with information of all packages from the survey
-funciones <- read.csv("RmovementPackagesInformation-20190227.csv")
+funciones <- read.csv("RmovementPackagesInformation.csv")
 # only keeping columns that we will use
 funciones <- funciones[,c("Package","Standard.manual","Vignettes","Papers")]
 

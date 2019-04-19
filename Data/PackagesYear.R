@@ -1,9 +1,10 @@
 # Barplot of packages per year
 
 library(ggplot2)
+library(tidyverse)
 
 # Table with information of all packages from the survey
-data <- read_csv("RmovementPackagesInformation-20190227.csv")
+data <- read_csv("RmovementPackagesInformation.csv")
 # only keeping columns that we will use
 data <- data[,c("Package","Year")]
 # Loading the names of packages we include in the review

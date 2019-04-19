@@ -22,6 +22,7 @@ GeoLight
 hab
 HMMoce
 kftrack
+lsmnsd
 m2b
 marcher
 migrateR
@@ -39,6 +40,7 @@ rhr
 rpostgisLT
 rsMove
 SDLfilter
+segclust2d
 SGAT/TripEstimation
 SimilarityMeasures
 SiMRiv

@@ -46,7 +46,7 @@ row.names.df <- row.names(table.counts)
 table.counts <- table.counts[order(row.names.df,decreasing = FALSE),order(col.names.df,decreasing = FALSE)]
 
 # Table with information of all packages from the survey
-data <- read_csv("RmovementPackagesInformation-20190227.csv")
+data <- read_csv("RmovementPackagesInformation.csv")
 # only keeping columns that we will use
 data <- data[,c("Package","Active")]
 
@@ -75,7 +75,7 @@ edges_sugg <- data.frame(suggesting=V(g)[el[,1]]$name,
 edges_sugg$type <- as.character(edges_sugg$type)
 
 imports <- read.csv("RmovePackages-Import-20180830.csv",stringsAsFactors = FALSE) # we need an only import file 
-imports <- imports[imports$Package %in% mov_pac$V1,]
+imports <- imports[imports$Package %in% mov_pac$Package,]
 for (i in 1:nrow(edges_sugg)){
   ind <- (imports$Package %in% as.character(edges_sugg$suggesting[i])) + 
     (imports$Dependency %in% as.character(edges_sugg$suggested[i]))
