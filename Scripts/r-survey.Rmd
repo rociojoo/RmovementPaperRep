@@ -5,7 +5,10 @@ author: "Rocío Joo and Matthew E. Boone"
 tags: ["R", "packages", "survey", "movement ecology", "trajectory", "tracks", "rocio", "matt"]
 summary: "In this post you'll find the complete results of our survey about R packages for movement analysis and tracking data processing."
 math: true
+# always_allow_html: yes
 output: html_document
+  # md_document:
+    # variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
