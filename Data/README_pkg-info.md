@@ -1,4 +1,5 @@
-Read Me file for RmovementPackagesInformation.csv
+README file for RmovementPackagesInformation.csv
+================================================
 
 It is a file with information about 74 R packages related to movement and tracking data processing/analysis. Information was collected between March and August 2018.
 
