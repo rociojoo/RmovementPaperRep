@@ -23,7 +23,7 @@ library("printr")
 ```
 
 ```{r data}
-data_dir <- "Data/"
+data_dir <- "data/"
 
 data <- read.csv(paste0(data_dir,"survey-responses.csv"), stringsAsFactors = FALSE)
 data_all <- data %>% filter(completion == 100)
