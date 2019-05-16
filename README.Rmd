@@ -1,7 +1,7 @@
 ---
 title: "Navigating through the R packages for movement: Supporting information"
-author: "Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille"
-date: "May 15, 2019"
+author: "Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille."
+date: "May 16, 2019"
 output:
   github_document:
     toc: true
@@ -52,21 +52,24 @@ pkg_info <- read.csv(paste0(data_dir, "pkg-info.csv"), stringsAsFactors = FALSE)
 
 ```
 
+## Overview
+
 This repository is a companion to the manuscript "*Navigating through
 the R packages for movement: a review for users and developers*", from
 Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick,
 Susana Clusella-Trullas, and Mathieu Basille (pre-print available on
 [arXiv.org](https://arxiv.org/abs/1901.05935)). This document is
-actually a dynamic R report, which RMarkdown sources are available
+actually a dynamic R report, for which RMarkdown sources are available
 [here](README.Rmd) with full code. The repository also serves to store
 data about:
 
 1. Information for [74 R packages](data/pkg-info.csv) related to
    tracking data processing and analysis. Information was collected
-   between March and August 2018. 59 of the packages were described in
-   the review, and 72 of those packages were the focus of a survey on
-   their users about their use, relevant and quality of their
-   documentation. The information was collected between March and
+   between March and August 2018. **59** of the packages were described in
+   the review, and **72** of those packages were the focus of a survey on
+   their users about their use, relevance and quality of their
+   documentation (see [packages included in the survey](#packages-included-in-the-survey) 
+   for more details). The information was collected between March and
    August 2018. Additional details about this data file are available
    [here](data/README_pkg-info.md).
 2. [Responses to an anonymous survey](data/survey-responses.csv) about
@@ -74,6 +77,7 @@ data about:
    related to movement. The survey was executed in the Fall of 2018.
    Additional details about this data file are available
    [here](data/README_survey-responses.md).
+
 
 
 ## A large amount of R packages for movement
@@ -126,14 +130,16 @@ ggplot(theTable, aes(x = Year, y = Total)) +
 
 ```
 
-Even worse, many packages are actually not connected to each others,
-showing a very fragmented landscape of tracking packages in R. Here we
-show a network representation of the dependency and suggestion between
-tracking packages (this is **Figure 4** of the manuscript). The arrows
-go towards the package the others suggest (dashed arrows) or depend on
-(solid arrows). Bold font corresponds to active packages.  The size of
-the circle is proportional to the number of packages that suggest or
-depend on this one.
+Since the packages were reviewed between March and August 2018, this 
+last year was incomplete and not included in the graph.
+
+Many packages are actually not connected to each others, showing a very 
+fragmented landscape of tracking packages in R. Here we show a network 
+representation of the dependency and suggestion between tracking packages 
+(this is **Figure 4** of the manuscript). The arrows go towards the package
+the others suggest (dashed arrows) or depend on (solid arrows). Bold font
+corresponds to active packages.  The size of the circle is proportional to 
+the number of packages that suggest or depend on this one.
 
 ```{r ms-fig-4, fig.width = 12, fig.height = 12}
 # loading the import + suggest information for each package
@@ -317,7 +323,8 @@ of the participants and no probabilistic sampling was involved. The
 survey was advertised by Twitter, mailing lists (r-sig-geo and
 r-sig-ecology), individual emails to researchers and the [lab's website](https://mablab.org/post/2018-08-31-r-movement-review/).
 
-The survey got exemption from the Institutional Review Board aqt University of Florida (IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250).
+The survey got exemption from the Institutional Review Board at University of Florida 
+(IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250).
 
 A total of `r data %>% filter(!is.na(completion)) %>% nrow()` people
 participated in the survey, and `r data_all %>% nrow()` answered all
@@ -425,8 +432,8 @@ ggplot(data = use_counts, aes(x = levels, y = total)) +
 ```
 
 Most participants considered themselves in an intermediate level 
-(`r prop[2]`), meaning that they could write functions in R. Some others
-were beginners (`r prop[1]`) and advanced (`r prop[3]`) R users.
+(`r prop[2]`%), meaning that they could write functions in R. Some others
+were beginners (`r prop[1]`%) and advanced (`r prop[3]`%) R users.
 
 
 ### Package use
@@ -585,8 +592,8 @@ use_per$counts <- apply(df2[, c("Good", "Excellent")], 1, sum)
 
 Remember that participants could only give their opinion on
 documentation regarding the packages they had used. Hence, the
-packages with many users got many documentation answers (Fig. 1 and
-4). Figure 5 allows for a closer look at the proportion of type of
+packages with many users got many documentation answers. The figure 
+above allows for a closer look at the proportion of type of
 response for each package.
 
 To identify some packages with remarkably good documentation, let's
@@ -594,31 +601,31 @@ first only consider those packages with at least 10 responses on the
 quality of documentation (regardless of the "Don't remember"). These
 are 27 (you can see the table of responses below). Among them,
 `momentuHMM` had more than 50% of the responses 
-(`r round(use_per["momentuHMM","Excellent"],2)`; 
+(`r round(use_per["momentuHMM","Excellent"],2)`%; 
 `r use_counts["momentuHMM","Excellent"]`) as "excellent documentation",
 meaning that the documentation was so good that thanks to it, more
 than half of its users discovered additional features of the package
 and were able to do more analyses than what they initially
 planned. Moreover, 11 packages had more than 75% of the responses as
 either "good" or "excellent": 
-`momentuHMM` (`r use_per["momentuHMM","good_excellent"]`; 
+`momentuHMM` (`r use_per["momentuHMM","good_excellent"]`%; 
 `r use_per["momentuHMM","counts"]`), 
-`moveHMM` (`r use_per["moveHMM","good_excellent"]`; 
+`moveHMM` (`r use_per["moveHMM","good_excellent"]`%; 
 `r use_per["moveHMM","counts"]`), 
-`adehabitatLT` (`r use_per["adehabitatLT","good_excellent"]`; 
+`adehabitatLT` (`r use_per["adehabitatLT","good_excellent"]`%; 
 `r use_per["adehabitatLT","counts"]`), 
-`adehabitatHS` (`r use_per["adehabitatHS","good_excellent"]`; 
+`adehabitatHS` (`r use_per["adehabitatHS","good_excellent"]`%; 
 `r use_per["adehabitatHS","counts"]`), 
-`adehabitatHR` (`r use_per["adehabitatHR","good_excellent"]`; 
+`adehabitatHR` (`r use_per["adehabitatHR","good_excellent"]`%; 
 `r use_per["adehabitatHR","counts"]`), 
-`EMbC` (`r use_per["EMbC","good_excellent"]`; `r use_per["EMbC","counts"]`),
-`wildlifeDI` (`r use_per["wildlifeDI","good_excellent"]`; 
+`EMbC` (`r use_per["EMbC","good_excellent"]`%; `r use_per["EMbC","counts"]`),
+`wildlifeDI` (`r use_per["wildlifeDI","good_excellent"]`%; 
 `r use_per["wildlifeDI","counts"]`), 
-`ctmm` (`r use_per["ctmm","good_excellent"]`; `r use_per["ctmm","counts"]`),
-`GeoLight` (`r use_per["GeoLight","good_excellent"]`; 
+`ctmm` (`r use_per["ctmm","good_excellent"]`%; `r use_per["ctmm","counts"]`),
+`GeoLight` (`r use_per["GeoLight","good_excellent"]`%; 
 `r use_per["GeoLight","counts"]`), 
-`move` (`r use_per["move","good_excellent"]`; `r use_per["move","counts"]`),
-`recurse` (`r use_per["recurse","good_excellent"]`; 
+`move` (`r use_per["move","good_excellent"]`%; `r use_per["move","counts"]`),
+`recurse` (`r use_per["recurse","good_excellent"]`%; 
 `r use_per["recurse","counts"]`). The two leading packages, `momentuHMM`
 and `moveHMM`, focus on the use of Hidden Markov models which allow
 identifying different patterns of behavior called states.
@@ -773,10 +780,10 @@ that were highly relevant for their users, considering only those
 packages with at least 10 responses. Among these 33 packages, three
 were regarded as either "Important" or "Essential" for more than 75%
 of their users: 
-`bsam` (`r use_per['bsam','good_excellent']`; `r use_per['bsam','counts']`), 
-`adehabitatHR` (`r use_per['adehabitatHR','good_excellent']`; 
+`bsam` (`r use_per['bsam','good_excellent']`%; `r use_per['bsam','counts']`), 
+`adehabitatHR` (`r use_per['adehabitatHR','good_excellent']`%; 
 `r use_per['adehabitatHR','counts']`), and 
-`adehabitatLT` (`r use_per['adehabitatLT','good_excellent']`; 
+`adehabitatLT` (`r use_per['adehabitatLT','good_excellent']`%; 
 `r use_per['adehabitatLT','counts']`). `bsam` allows fitting Bayesian
 state-space models to animal tracking data.
 

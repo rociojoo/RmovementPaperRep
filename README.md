@@ -1,8 +1,9 @@
 Navigating through the R packages for movement: Supporting information
 ================
-Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille
-May 15, 2019
+Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille.
+May 16, 2019
 
+-   [Overview](#overview)
 -   [A large amount of R packages for movement](#a-large-amount-of-r-packages-for-movement)
 -   [The survey](#the-survey)
     -   [Packages included in the survey](#packages-included-in-the-survey)
@@ -15,9 +16,12 @@ May 15, 2019
     -   [Package Relevance](#package-relevance)
 -   [Summary](#summary)
 
-This repository is a companion to the manuscript "*Navigating through the R packages for movement: a review for users and developers*", from Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille (pre-print available on [arXiv.org](https://arxiv.org/abs/1901.05935)). This document is actually a dynamic R report, which RMarkdown sources are available [here](README.Rmd) with full code. The repository also serves to store data about:
+Overview
+--------
 
-1.  Information for [74 R packages](data/pkg-info.csv) related to tracking data processing and analysis. Information was collected between March and August 2018. 59 of the packages were described in the review, and 72 of those packages were the focus of a survey on their users about their use, relevant and quality of their documentation. The information was collected between March and August 2018. Additional details about this data file are available [here](data/README_pkg-info.md).
+This repository is a companion to the manuscript "*Navigating through the R packages for movement: a review for users and developers*", from Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick, Susana Clusella-Trullas, and Mathieu Basille (pre-print available on [arXiv.org](https://arxiv.org/abs/1901.05935)). This document is actually a dynamic R report, for which RMarkdown sources are available [here](README.Rmd) with full code. The repository also serves to store data about:
+
+1.  Information for [74 R packages](data/pkg-info.csv) related to tracking data processing and analysis. Information was collected between March and August 2018. **59** of the packages were described in the review, and **72** of those packages were the focus of a survey on their users about their use, relevance and quality of their documentation (see [packages included in the survey](#packages-included-in-the-survey) for more details). The information was collected between March and August 2018. Additional details about this data file are available [here](data/README_pkg-info.md).
 2.  [Responses to an anonymous survey](data/survey-responses.csv) about the use, relevance and quality of the documentation of 72 packages related to movement. The survey was executed in the Fall of 2018. Additional details about this data file are available [here](data/README_survey-responses.md).
 
 A large amount of R packages for movement
@@ -27,7 +31,9 @@ The manuscript presents a review of R packages for movement. R is one of the mos
 
 ![](figures/ms-fig-2-1.png)
 
-Even worse, many packages are actually not connected to each others, showing a very fragmented landscape of tracking packages in R. Here we show a network representation of the dependency and suggestion between tracking packages (this is **Figure 4** of the manuscript). The arrows go towards the package the others suggest (dashed arrows) or depend on (solid arrows). Bold font corresponds to active packages. The size of the circle is proportional to the number of packages that suggest or depend on this one.
+Since the packages were reviewed between March and August 2018, this last year was incomplete and not included in the graph.
+
+Many packages are actually not connected to each others, showing a very fragmented landscape of tracking packages in R. Here we show a network representation of the dependency and suggestion between tracking packages (this is **Figure 4** of the manuscript). The arrows go towards the package the others suggest (dashed arrows) or depend on (solid arrows). Bold font corresponds to active packages. The size of the circle is proportional to the number of packages that suggest or depend on this one.
 
 ![](figures/ms-fig-4-1.png)
 
@@ -54,7 +60,7 @@ A total of 72 packages were included in this survey: `acc`, `accelerometry`, `ad
 
 The survey was designed to be completely anonymous, meaning that we had no way to know who participated. There was no previous selection of the participants and no probabilistic sampling was involved. The survey was advertised by Twitter, mailing lists (r-sig-geo and r-sig-ecology), individual emails to researchers and the [lab's website](https://mablab.org/post/2018-08-31-r-movement-review/).
 
-The survey got exemption from the Institutional Review Board aqt University of Florida (IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250).
+The survey got exemption from the Institutional Review Board at University of Florida (IRB02 Office, Box 112250, University of Florida, Gainesville, FL 32611-2250).
 
 A total of 446 people participated in the survey, and 225 answered all four questions. To answer all questions the participant had to have tried at least one of the packages. In the following sections, we analyze only completed surveys.
 
@@ -83,7 +89,7 @@ Let's see first the level of use in R of the participants. The options were:
 
 ![Level of R use](figures/user-experience-1.png)
 
-Most participants considered themselves in an intermediate level (60.9), meaning that they could write functions in R. Some others were beginners (18.7) and advanced (20.4) R users.
+Most participants considered themselves in an intermediate level (60.9%), meaning that they could write functions in R. Some others were beginners (18.7%) and advanced (20.4%) R users.
 
 ### Package use
 
@@ -187,9 +193,9 @@ In this survey we asked the participants how helpful was the documentation provi
 
 ![Bar plots of absolute frequency of each category of package documentation](figures/documentation-1.png)
 
-Remember that participants could only give their opinion on documentation regarding the packages they had used. Hence, the packages with many users got many documentation answers (Fig. 1 and 4). Figure 5 allows for a closer look at the proportion of type of response for each package.
+Remember that participants could only give their opinion on documentation regarding the packages they had used. Hence, the packages with many users got many documentation answers. The figure above allows for a closer look at the proportion of type of response for each package.
 
-To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the "Don't remember"). These are 27 (you can see the table of responses below). Among them, `momentuHMM` had more than 50% of the responses (59.38; 19) as "excellent documentation", meaning that the documentation was so good that thanks to it, more than half of its users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": `momentuHMM` (93.75; 30), `moveHMM` (89.47; 51), `adehabitatLT` (88.57; 124), `adehabitatHS` (86.14; 87), `adehabitatHR` (83.23; 139), `EMbC` (81.82; 18), `wildlifeDI` (81.25; 13), `ctmm` (80; 32), `GeoLight` (77.78; 21), `move` (76.56; 49), `recurse` (76.47; 13). The two leading packages, `momentuHMM` and `moveHMM`, focus on the use of Hidden Markov models which allow identifying different patterns of behavior called states.
+To identify some packages with remarkably good documentation, let's first only consider those packages with at least 10 responses on the quality of documentation (regardless of the "Don't remember"). These are 27 (you can see the table of responses below). Among them, `momentuHMM` had more than 50% of the responses (59.38%; 19) as "excellent documentation", meaning that the documentation was so good that thanks to it, more than half of its users discovered additional features of the package and were able to do more analyses than what they initially planned. Moreover, 11 packages had more than 75% of the responses as either "good" or "excellent": `momentuHMM` (93.75%; 30), `moveHMM` (89.47%; 51), `adehabitatLT` (88.57%; 124), `adehabitatHS` (86.14%; 87), `adehabitatHR` (83.23%; 139), `EMbC` (81.82%; 18), `wildlifeDI` (81.25%; 13), `ctmm` (80%; 32), `GeoLight` (77.78%; 21), `move` (76.56%; 49), `recurse` (76.47%; 13). The two leading packages, `momentuHMM` and `moveHMM`, focus on the use of Hidden Markov models which allow identifying different patterns of behavior called states.
 
 One way to visualize the quality of documentation is to relate the rating to the number of respondents who declared using each package (this is **Figure 3** of the manuscript). This figure shows the proportion of good and excellent documentation for packages with at least 10 respondents; light green corresponds to packages with standard documentation only, blue is for packages with vignettes, and purple is for packages that also have peer-reviewed articles published:
 
@@ -277,7 +283,7 @@ Participants were asked how relevant was each of the packages they use for their
 
 ![Bar plots of absolute frequency of each category of package relevance](figures/importance-1.png)
 
-The two barplots show the absolute and relative frequency of the answers for each package, respectively. We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: `bsam` (81.48; 22), `adehabitatHR` (81.08; 150), and `adehabitatLT` (75.16; 118). `bsam` allows fitting Bayesian state-space models to animal tracking data.
+The two barplots show the absolute and relative frequency of the answers for each package, respectively. We identified the packages that were highly relevant for their users, considering only those packages with at least 10 responses. Among these 33 packages, three were regarded as either "Important" or "Essential" for more than 75% of their users: `bsam` (81.48%; 22), `adehabitatHR` (81.08%; 150), and `adehabitatLT` (75.16%; 118). `bsam` allows fitting Bayesian state-space models to animal tracking data.
 
 ![Bar plots of relative frequency of each category of package relevance (for packages with more than 5 users)](figures/importance-percentage-1.png)
 
