@@ -10,10 +10,14 @@ output:
 
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
-                      fig.path = "figures/")
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, 
+    fig.path = "figures/")
+library("igraph")
+library("scales")
+library("Matrix")
 library("dplyr")
 library("cowplot")
+library("viridis")
 library("reshape")
 library("RColorBrewer")
 ## library("kableExtra")
@@ -25,38 +29,228 @@ library("printr")
 ```{r data}
 data_dir <- "data/"
 
-data <- read.csv(paste0(data_dir,"survey-responses.csv"), stringsAsFactors = FALSE)
+
+
+data <- read.csv(paste0(data_dir, "survey-responses.csv"), stringsAsFactors = FALSE)
 data_all <- data %>% filter(completion == 100)
-packages <- read.csv(paste0(data_dir, "pkg-list-survey.csv"), stringsAsFactors = FALSE)
+packages <- read.csv(paste0(data_dir, "pkg-list-survey.csv"), 
+    stringsAsFactors = FALSE)
 
-data_question_1 <- data_all[,grep("q1", colnames(data_all))]
+data_question_1 <- data_all[, grep("q1", colnames(data_all))]
 colnames(data_question_1) <- t(packages)
-# dropping trajr that was added in the end and only got 1 response
+# dropping trajr that was added in the end and only got 1
+# response
 data_question_1 <- data_question_1[, -grep("trajr", colnames(data_question_1))]
+packages_new <- packages[-which(packages == "trajr"), ]
 
-Total <- sapply(1:dim(data_question_1)[1], function(x){
-  sum(as.numeric(data_question_1[x, ] != "Never"))
+Total <- sapply(1:dim(data_question_1)[1], function(x) {
+    sum(as.numeric(data_question_1[x, ] != "Never"))
 })
 discard_rows <- which(Total == 0)
 data_all <- data_all[-discard_rows, ]
 
+# Table with information of all packages from the survey
+pkg_info <- read.csv(paste0(data_dir, "pkg-info.csv"), stringsAsFactors = FALSE)
+
 ```
-
-
-## A large amount of R packages for movement and the need for a survey
 
 This repository is a companion to the manuscript "*Navigating through
 the R packages for movement: a review for users and developers*", from
 Rocio Joo, Matthew E. Boone, Thomas A. Clay, Samantha C. Patrick,
-Susana Clusella-Trullas, and Mathieu Basille. The manuscript is a
-review of R packages for movement. R is one of the most used
-programming softwares to process, visualize and analyze data from
-tracking devices. The large amount of existing packages makes it
-difficult to keep track of the spectrum of choices. Our review aimed
-at an objective introduction to the packages organized by the type of
-processing or analyzing they focused on, and to provide feedback to
-developers from a user perspective. For the second objective, we
-elaborated a survey for package users regarding:
+Susana Clusella-Trullas, and Mathieu Basille (pre-print available on
+[arXiv.org](https://arxiv.org/abs/1901.05935)). This document is
+actually a dynamic R report, which RMarkdown sources are available
+[here](README.Rmd) with full code. The repository also serves to store
+data about:
+
+1. Information for [74 R packages](data/pkg-info.csv) related to
+   tracking data processing and analysis. Information was collected
+   between March and August 2018. 59 of the packages were described in
+   the review, and 72 of those packages were the focus of a survey on
+   their users about their use, relevant and quality of their
+   documentation. The information was collected between March and
+   August 2018. Additional details about this data file are available
+   [here](data/README_pkg-info.md).
+2. [Responses to an anonymous survey](data/survey-responses.csv) about
+   the use, relevance and quality of the documentation of 72 packages
+   related to movement. The survey was executed in the Fall of 2018.
+   Additional details about this data file are available
+   [here](data/README_survey-responses.md).
+
+
+## A large amount of R packages for movement
+
+The manuscript presents a review of R packages for movement. R is one
+of the most used programming softwares to process, visualize and
+analyze data from tracking devices. The large amount of existing
+packages makes it difficult to keep track of the spectrum of choices,
+with an increasing number of available packages every year (this is
+**Figure 2** of the manuscript):
+
+```{r ms-fig-2}
+# only keeping columns that we will use
+data_pkg <- pkg_info[, c("Package", "Year")]
+# Loading the names of packages we include in the review
+mov_pac <- read.csv(paste0(data_dir, "pkg-list-paper.csv"), stringsAsFactors = FALSE)
+mov_pac[mov_pac == "SGAT/TripEstimation"] <- "SGAT"
+mov_pac[mov_pac == "TwGeos/BAStag"] <- "TwGeos"
+mov_pac[mov_pac == "ukfsst/kfsst"] <- "ukfsst"
+
+# Subsetting by packages in review
+ind.mov.pac <- match(mov_pac$Package, data_pkg$Package)
+data_pkg <- data_pkg[ind.mov.pac, ]
+
+# counting packages per year
+theTable <- as.data.frame(table(data_pkg$Year, useNA = "no"))
+colnames(theTable) <- c("Year", "Total")
+
+# in case there are some years without publication of
+# packages
+theTable$Year <- as.numeric(levels(theTable$Year))
+# filter out 2018 which is not complete
+theTable <- theTable %>% filter(Year < 2018)
+range_year <- range(theTable$Year)
+values_year <- range_year[1]:range_year[2]
+missing_years <- setdiff(values_year, theTable$Year)
+
+theTable <- rbind.data.frame(cbind.data.frame(Year = missing_years, 
+    Total = rep(0, length(missing_years))), theTable)
+theTable$Year <- factor(theTable$Year, levels = sort(theTable$Year))
+
+ggplot(theTable, aes(x = Year, y = Total)) +
+    geom_bar(stat = "identity", position = "identity") +
+    xlab("Year of publication") + ylab("Number of packages") +
+    scale_y_continuous(minor_breaks = seq(0, 12, 1), breaks = seq(0, 
+        12, 3)) +
+    background_grid(major = "y", minor = "none", colour.major = "grey80", 
+        size.major = 0.5)
+
+```
+
+Even worse, many packages are actually not connected to each others,
+showing a very fragmented landscape of tracking packages in R. Here we
+show a network representation of the dependency and suggestion between
+tracking packages (this is **Figure 4** of the manuscript). The arrows
+go towards the package the others suggest (dashed arrows) or depend on
+(solid arrows). Bold font corresponds to active packages.  The size of
+the circle is proportional to the number of packages that suggest or
+depend on this one.
+
+```{r ms-fig-4, fig.width = 12, fig.height = 12}
+# loading the import + suggest information for each package
+imports <- read.csv(paste0(data_dir, "pkg-import-suggest.csv"),
+    stringsAsFactors = FALSE)
+
+# getting the names of all packages that participate here as
+# a dependent or dependency (or suggestion)
+packages_dep <- unique(c(imports$Package, imports$Dependency))
+imports$Dependency[which(imports$Dependency == "-")] <- NA
+
+# accomodating everything as a matrix of counts
+packages_dep <- packages_dep[-which(packages_dep == "-")]  # excluding packages with neither dependencies or suggestions
+pack.id <- 1:length(packages_dep)
+table.counts <- as.data.frame.matrix(table(imports$Package, imports$Dependency))  # table of counts with rows as list of packages and columns the packages they depend on/suggest
+# but we only want to account for tracking packages.
+
+# So in the end, we want a matrix of counts which would be
+# square, with rows and columns of tracking packages.
+# Problem? Not all tracking packages are counted as
+# dependencies or suggestions of other packages, so they are
+# not in the columns. We are going to add the missing ones
+# first (with zeros) and then remove the columns that should
+# not be there
+
+new_col <- setdiff(t(mov_pac), colnames(table.counts))
+zero_matrix <- matrix(0, ncol = length(new_col), nrow = dim(table.counts)[1])
+row.names(zero_matrix) <- row.names(table.counts)
+colnames(zero_matrix) <- new_col
+table.counts <- cbind.data.frame(table.counts, zero_matrix)
+
+ind.mov.row <- match(t(mov_pac), row.names(table.counts))
+ind.mov.col <- match(t(mov_pac), colnames(table.counts))
+
+table.counts <- table.counts[ind.mov.row, ind.mov.col]
+# making sure that the order is right
+col.names.df <- colnames(table.counts)
+row.names.df <- row.names(table.counts)
+table.counts <- table.counts[order(row.names.df, decreasing = FALSE),
+    order(col.names.df, decreasing = FALSE)]
+
+# only keeping columns that we will use
+data_pkg <- pkg_info[, c("Package", "Active")]
+
+data_pkg$Package[data_pkg$Package == "SGAT/TripEstimation"] <- "SGAT"
+data_pkg$Package[data_pkg$Package == "TwGeos/BAStag"] <- "TwGeos"
+data_pkg$Package[data_pkg$Package == "ukfsst/kfsst"] <- "ukfsst"
+
+ind.mov.cran <- match(t(mov_pac), data_pkg$Package)
+data_pkg <- data_pkg[ind.mov.cran, ]
+
+table.mov <- t(table.counts)  # transposing for plotting
+
+num_sugg <- apply(table.mov, 1, sum)  # total number of dep/sugg
+
+g.matrix <- graph.adjacency(t(as.matrix(table.mov)), weighted = TRUE,
+    mode = "directed", diag = FALSE)
+g <- simplify(g.matrix)
+
+font_text <- rep(1, nrow(data_pkg))
+font_text[data_pkg$Active == "Yes"] <- 2  # bold for active packages
+color_back <- "white"  #alpha('snow3',data_pkg$downloads/max(data_pkg$downloads))
+
+# now, we want to make dashed and more transparent arrows for
+# suggestion but darker and solid arrows for import
+el <- as_edgelist(g)
+edges_sugg <- data_frame(suggesting = V(g)[el[, 1]]$name, suggested = V(g)[el[,
+    2]]$name, type = "suggestion")
+edges_sugg$type <- as.character(edges_sugg$type)
+
+imports <- read.csv(paste0(data_dir, "pkg-import.csv"), stringsAsFactors = FALSE)  # we need an only import file
+imports <- imports[imports$Package %in% mov_pac$Package, ]
+for (i in 1:nrow(edges_sugg)) {
+    ind <- (imports$Package %in% as.character(edges_sugg$suggesting[i])) +
+        (imports$Dependency %in% as.character(edges_sugg$suggested[i]))
+    if (any(ind == 2)) {
+        edges_sugg$type[i] <- "dependency"
+    }
+}
+
+line_type <- rep(2, length(E(g)))
+line_type[edges_sugg$type == "dependency"] <- 1
+line_color <- rep(alpha("#ef8a62", 0.5), length(E(g)))
+line_color[edges_sugg$type == "dependency"] <- alpha("#ef8a62",
+    0.8)
+
+# General options for plotting.
+V(g)$label.family <- "Helvetica"
+V(g)$label <- V(g)$name
+V(g)$degree <- degree(g)
+layout1 <- layout.fruchterman.reingold(g)
+V(g)$label.color <- "darkblue"
+V(g)$label.font <- font_text
+V(g)$frame.color <- alpha("black", 0.7)
+V(g)$label.cex <- 1.5
+V(g)$color <- color_back
+V(g)$size <- 40 * num_sugg/sum(num_sugg)
+egam <- 3
+E(g)$width <- egam * 1.5
+E(g)$arrow.size <- egam/3
+E(g)$lty <- line_type
+E(g)$color <- line_color
+
+# pdf('NetworkImportSuggestTrack.pdf',width = 18,height = 16)
+plot(g, layout = layout1, vertex.label.dist = 0.5)
+# dev.off()
+
+```
+
+
+## The survey
+
+Our review aimed at an objective introduction to the packages
+organized by the type of processing or analyzing they focused on, and
+to provide feedback to developers from a user perspective. For the
+second objective, we elaborated a survey for package users regarding:
 
 1. How popular those packages are;
 2. How well documented they are;
@@ -64,13 +258,11 @@ elaborated a survey for package users regarding:
 
 Those were the three questions that we asked about the packages, plus
 one about the level as an R user of the survey participant.  In the
-review we showed results regarding package documentation. In this
-document, we present the complete results of the survey. Note that
-this document is actually a dynamic R report, which RMarkdown sources
-are also available [here](README.Rmd) with full code.
+review we showed results regarding package documentation. In the
+following, we present the complete results of the survey.
 
 
-## Packages included in the survey
+### Packages included in the survey
 
 In theory, any package could be potentially useful for movement
 analysis; either a time series package, a spatial analysis one or even
@@ -118,7 +310,7 @@ A total of 72 packages were included in this survey: `acc`,
 and `wildlifeDI`.
 
 
-## Participation in the survey 
+### Participation in the survey 
 
 The survey was designed to be completely anonymous, meaning that we
 had no way to know who participated. There was no previous selection
@@ -135,6 +327,70 @@ tried at least one of the packages. In the following sections, we
 analyze only completed surveys.
 
 
+### Survey representativity
+
+To get a rough idea of how representative the survey was of the
+population of the package users, we compared the number of
+participants that used each package to the number of monthly downloads
+that each package has.
+
+The number of downloads were calculated using the R package
+`cran.stats`. It calculates the number of independent downloads by
+each package (substracting downloads by dependencies) by day. It only
+provides download statistics for packages on CRAN, downloaded using
+the RStudio CRAN mirror—total downloads are likely to be an order of
+magnitude higher. We computed the average number of downloads per
+month, from September 2017 to August 2018; fewer months were
+considered for packages that were younger than one year old.
+
+There is no perfect match between the number of users and the number
+of downloads per package, but a correlation of 0.85 for the 49
+packages on CRAN provides evidence of an overall good representation
+of the users of tracking packages in the survey. Moreover, most of the
+packages with very few users in the survey regardless of their
+relatively high download statistics were accelerometry packages for
+human patients, which would be revealing that we did not reach that
+subpopulation of users through Twitter and emails.
+
+A log-log plot for both metrics is shown in the figure below.
+
+```{r representativity, fig.width = 14, fig.height = 8}
+data_question <- data_all[, grep("q1", colnames(data_all))]
+colnames(data_question) <- t(packages)
+# I'm dropping trajr that was added in the end and only got 1
+# response
+data_question <- data_question[, -grep("trajr", colnames(data_question))]
+packages_new <- packages[-which(packages == "trajr"), ]
+categories <- c("Never", "Rarely", "Sometimes", "Often")
+use_counts <- t(sapply(1:ncol(data_question), function(x) {
+    data_line <- factor(data_question[, x], levels = categories)
+    count_p_use <- as.numeric(table(data_line))
+    return(count_p_use)
+}))
+use_counts <- data.frame(use_counts)
+colnames(use_counts) <- categories
+rownames(use_counts) <- t(packages_new)
+use_counts$Package <- row.names(use_counts)
+use_counts <- use_counts %>% mutate(users = Rarely + Sometimes + 
+    Often)
+
+funciones <- read.csv(paste0(data_dir, "pkg-info.csv"))
+matrix_fun <- left_join(use_counts, funciones)
+matrix_fun <- matrix_fun[(!is.na(matrix_fun$monthly.downloads)), 
+    ]
+
+ggplot(matrix_fun, aes(x = users, y = monthly.downloads)) +
+    geom_point(size = 3) +
+    geom_text_repel(label = matrix_fun$Package, segment.size = 0.6, 
+        force = 3, segment.alpha = 0.5, hjust = 0, box.padding = 0.5, 
+        min.segment.length = 0.1, size = 6, direction = "both") +
+    scale_x_continuous(trans = "log10") +
+    scale_y_continuous(trans = "log10") +
+    xlab("Number of users") + ylab("Monthly downloads")
+
+```
+
+
 ## The questions
 
 ### User level
@@ -149,21 +405,23 @@ were:
 * Advanced: You commonly use version control or contribute to develop
   packages.
 
-```{r user-experience, fig.width=14, fig.height=10, fig.cap="Level of R use"}
-data_question_4 <- data_all[,grep("q4", colnames(data_all))]
+```{r user-experience, fig.width=7, fig.height=5, fig.cap="Level of R use"}
+data_question_4 <- data_all[, grep("q4", colnames(data_all))]
 categories <- c("Beginner", "Intermediate", "Advanced")
-data_question_4 <- factor(unlist(lapply(strsplit(data_question_4, "\\:"),
-                                        "[[", 1)), levels = categories)
+data_question_4 <- factor(unlist(lapply(strsplit(data_question_4,
+    "\\:"), "[[", 1)), levels = categories)
 use_counts <- as.numeric(table(data_question_4))
-prop <- round(as.numeric(prop.table(table(data_question_4)))*100, 1)
-use_counts<-data.frame(levels = categories, total = use_counts)
+prop <- round(as.numeric(prop.table(table(data_question_4))) *
+    100, 1)
+use_counts <- data.frame(levels = categories, total = use_counts)
 use_counts$levels <- factor(as.character(use_counts$levels),
-                            levels = categories)
+    levels = categories)
 
 ggplot(data = use_counts, aes(x = levels, y = total)) +
-  geom_bar(stat = "identity", position = position_dodge()) +
-  geom_text(aes(label = total), size = 6.0, vjust = 1.5, hjust = 1.2,
-            color = "white", position = position_dodge(0.9))
+    geom_bar(stat = "identity", position = position_dodge()) +
+    geom_text(aes(label = total), size = 6, vjust = 1.5, hjust = .5, 
+        color = "white") +
+    xlab("Level of use") + ylab("Total respondents")
 
 ```
 
@@ -190,17 +448,18 @@ reason, those 5 packages will not appear in the analysis of the next
 questions.
 
 ```{r relevance, fig.width = 16, fig.height = 15, fig.cap = "Package use"}
-data_question <- data_all[,grep("q1", colnames(data_all))]
+data_question <- data_all[, grep("q1", colnames(data_all))]
 colnames(data_question) <- t(packages)
-# I'm dropping trajr that was added in the end and only got 1 response
+# I'm dropping trajr that was added in the end and only got 1
+# response
 data_question <- data_question[, -grep("trajr", colnames(data_question))]
-packages_new <- packages[-which(packages=="trajr"), ]
+packages_new <- packages[-which(packages == "trajr"), ]
 
 categories <- c("Never", "Rarely", "Sometimes", "Often")
-use_counts <- t(sapply(1:ncol(data_question), function(x){
-  data_line <- factor(data_question[, x], levels = categories)
-  count_p_use <- as.numeric(table(data_line))
-  return(count_p_use)
+use_counts <- t(sapply(1:ncol(data_question), function(x) {
+    data_line <- factor(data_question[, x], levels = categories)
+    count_p_use <- as.numeric(table(data_line))
+    return(count_p_use)
 }))
 use_counts <- data.frame(use_counts)
 colnames(use_counts) <- categories
@@ -208,17 +467,18 @@ rownames(use_counts) <- t(packages_new)
 use_counts$package <- row.names(use_counts)
 
 df1 <- melt(use_counts, id.vars = "package", variable_name = "response")
-g <- unlist(by(df1, df1$package, function(x)
-  sum(x$value[x$response != "Never"])))
+g <- unlist(by(df1, df1$package, function(x) sum(x$value[x$response !=
+    "Never"])))
 
 df1$package <- factor(df1$package, levels = names(sort(g, decreasing = FALSE)))
-color.pallete <- brewer.pal(5,"YlGnBu")
+color.pallete <- brewer.pal(5, "YlGnBu")
 color.pallete[1] <- "lightgray"
 
 ggplot(data = df1) +
-  geom_col(aes(x = package, y = value, fill = response)) +
-  coord_flip() + scale_fill_manual(values = color.pallete) +
-  ylab("count")
+    geom_col(aes(x = package, y = value, fill = response)) +
+    coord_flip() +
+    scale_fill_manual(values = color.pallete) +
+    ylab("Count")
 
 ```
 
@@ -238,7 +498,7 @@ There is actually not much difference in the number of packages used
 by the distinct levels of R users as you can see in the boxplots
 below:
 
-```{r boxplot-users-packages, fig.width = 5, fig.height = 6, fig.cap = "Packages per user level"}
+```{r boxplot-users-packages, fig.width = 7, fig.height = 5, fig.cap = "Packages per user level"}
 Total <- Total[-discard_rows]
 new_df <- cbind.data.frame(Total, user = data_question_4)
 categories <- c("Beginner", "Intermediate", "Advanced")
@@ -246,9 +506,9 @@ new_df <- cbind.data.frame(Total, user = data_question_4)
 new_df$user <- factor(as.character(new_df$user), levels = categories)
 
 ggplot(new_df, aes(x = user, y = Total)) +
-  geom_boxplot() +
-  scale_y_continuous(breaks = 0:max(new_df$Total)) +
-  xlab('user level') + ylab('package count')
+    geom_boxplot() +
+    scale_y_continuous(breaks = 0:max(new_df$Total)) +
+    xlab("User level") + ylab("Package count")
 
 ```
 
@@ -276,17 +536,18 @@ one of the following options:
 * Don't remember: "I honestly can't remember…"
 
 ```{r documentation, fig.width = 16, fig.height = 15, fig.cap = "Bar plots of absolute frequency of each category of package documentation"}
-data_question <- data_all[,grep("q2", colnames(data_all))]
+data_question <- data_all[, grep("q2", colnames(data_all))]
 colnames(data_question) <- t(packages)
-# I'm dropping trajr that was added in the end and only got 1 response
+# I'm dropping trajr that was added in the end and only got 1
+# response
 data_question <- data_question[, -grep("trajr", colnames(data_question))]
-packages_new <- packages[-which(packages=="trajr"), ]
+packages_new <- packages[-which(packages == "trajr"), ]
 
 categories <- c("Not enough", "Basic", "Good", "Excellent", "Don't remember")
-use_counts <- t(sapply(1:ncol(data_question), function(x){
-  data_line <- factor(data_question[, x], levels = categories)
-  count_p_use <- as.numeric(table(data_line, useNA = "no"))
-  return(count_p_use)
+use_counts <- t(sapply(1:ncol(data_question), function(x) {
+    data_line <- factor(data_question[, x], levels = categories)
+    count_p_use <- as.numeric(table(data_line, useNA = "no"))
+    return(count_p_use)
 }))
 use_counts <- data.frame(use_counts)
 colnames(use_counts) <- categories
@@ -301,22 +562,26 @@ g <- unlist(by(df1, df1$package, function(x) sum(x$value)))
 color.pallete <- brewer.pal(5, "YlGnBu")
 color.pallete[1] <- "lightgray"
 df1$package <- factor(df1$package, levels = names(sort(g, decreasing = FALSE)))
-df1$response <- factor(df1$response, levels = rev(c("Excellent", "Good", "Basic",
-                                                    "Not enough", "Don\'t remember")))
+df1$response <- factor(df1$response, levels = rev(c("Excellent", 
+    "Good", "Basic", "Not enough", "Don't remember")))
 
 ggplot(data = df1) +
-  geom_col(aes(x = package, y = value, fill = response)) +
-  ylab('count') + coord_flip() +
-  scale_fill_manual(values = color.pallete)
+    geom_col(aes(x = package, y = value, fill = response)) +
+    coord_flip() +
+    scale_fill_manual(values = color.pallete) +
+    background_grid(major = "x", minor = "x", colour.major = "grey80", 
+        colour.minor = "grey80", size.major = 0.5) +
+    ylab("Count")
 
 ```
 
 ```{r useage counts}
 df2 <- use_counts[, c("Not enough", "Basic", "Good", "Excellent")]
-use_per <- df2/apply(df2, 1, sum)*100
-use_per$good_excellent <- signif(apply(use_per[, c("Good", "Excellent")],
-                                       1, sum), 4)
+use_per <- df2/apply(df2, 1, sum) * 100
+use_per$good_excellent <- signif(apply(use_per[, c("Good", "Excellent")], 
+    1, sum), 4)
 use_per$counts <- apply(df2[, c("Good", "Excellent")], 1, sum)
+
 ```
 
 Remember that participants could only give their opinion on
@@ -359,6 +624,76 @@ either "good" or "excellent":
 and `moveHMM`, focus on the use of Hidden Markov models which allow
 identifying different patterns of behavior called states.
 
+One way to visualize the quality of documentation is to relate the
+rating to the number of respondents who declared using each package
+(this is **Figure 3** of the manuscript). This figure shows the
+proportion of good and excellent documentation for packages with at
+least 10 respondents; light green corresponds to packages with
+standard documentation only, blue is for packages with vignettes, and
+purple is for packages that also have peer-reviewed articles
+published:
+
+```{r ms-fig-3, fig.width = 14, fig.height = 8}
+# question about documentation
+data_question <- data_all[, grep("q2", colnames(data_all))]
+colnames(data_question) <- t(packages)
+# I'm dropping trajr that was added in the end and only got 1
+# response
+data_question <- data_question[, -grep("trajr", colnames(data_question))]
+packages_new <- packages[-which(packages == "trajr"), ]
+
+categories <- c("Not enough", "Basic", "Good", "Excellent", "Don't remember")
+use_counts <- t(sapply(1:ncol(data_question), function(x) {
+    data_line <- factor(data_question[, x], levels = categories)
+    count_p_use <- as.numeric(table(data_line, useNA = "no"))
+    return(count_p_use)
+}))
+use_counts <- data.frame(use_counts)
+colnames(use_counts) <- categories
+rownames(use_counts) <- t(packages_new)
+total_package <- rowSums(use_counts)
+use_counts$Package <- row.names(use_counts)
+use_counts <- use_counts[total_package > 0, ]
+
+matrix_fun <- left_join(use_counts, funciones)
+# not all of the packages from the survey are included in the
+# review
+packages_paper <- read.csv(paste0(data_dir, "pkg-list-paper.csv"))
+matrix_fun <- inner_join(packages_paper, matrix_fun)
+
+# clarifying documentation options
+matrix_fun$documentation <- c("Manual")
+matrix_fun$documentation[matrix_fun$Vignettes == "Yes" & matrix_fun$Papers == 
+    "No"] <- c("Manual+Vignette")
+matrix_fun$documentation[matrix_fun$Vignettes == "Yes" & matrix_fun$Papers == 
+    "Yes"] <- c("Manual+Vignette+Paper")
+
+matrix_fun$num_answers <- rowSums(matrix_fun[2:5])
+matrix_fun$Good_Exc <- (rowSums(matrix_fun[4:5]))/matrix_fun$num_answers * 
+    100
+
+# discarding the packages we did not get users from:
+matrix_fun_2 <- matrix_fun[matrix_fun$num_answers > 0, ]  # missing: 'feedR' 'smam'            
+matrix_fun_3 <- matrix_fun[matrix_fun$num_answers >= 10, ]
+
+ggplot(matrix_fun_3, aes(x = num_answers, y = Good_Exc, col = documentation)) + 
+    geom_point(size = 3) +
+    geom_text_repel(label = matrix_fun_3$Package, segment.size = 1, 
+        force = 1, segment.alpha = 0.4, hjust = 0, box.padding = 0.4, 
+        min.segment.length = 0.25, size = 6) + 
+    xlab("Number of respondents") + ylab("Good or Excellent Rating") + 
+    ## scale_colour_manual(values = color.pallete) +
+    scale_color_viridis(discrete = TRUE, end = .75, option = "D", direction = -1)+
+    background_grid(major = "xy", colour.major = "grey80") +
+    theme(legend.position = "none")
+## ggsave("Rating_V_Use1.png", plot = plot1, width = 14, height = 8, 
+##     units = "in")
+
+```
+
+If you want to check the numbers for specific packages, the complete
+table is below:
+
 ```{r documentation-table}
 use_counts[, 1:length(categories)]
 
@@ -367,7 +702,7 @@ use_counts[, 1:length(categories)]
 ```
 
 
-## Package Revelance
+### Package Relevance
 
 Participants were asked how relevant was each of the packages they use
 for their work. They had to answer using one of the following options:
@@ -384,21 +719,23 @@ for their work. They had to answer using one of the following options:
 ```{r importance, fig.width = 16, fig.height = 15, fig.cap = "Bar plots of absolute frequency of each category of package relevance"}
 data_question <- data_all[, grep("q3", colnames(data_all))]
 colnames(data_question) <- t(packages)
-# I'm dropping trajr that was added in the end and only got 1 response
+# I'm dropping trajr that was added in the end and only got 1
+# response
 data_question <- data_question[, -grep("trajr", colnames(data_question))]
 packages_new <- packages[-which(packages == "trajr"), ]
 
-categories <- c("Not relevant", "Slightly relevant", "Important", "Essential")
-use_counts <- t(sapply(1:ncol(data_question), function(x){
-  data_line <- factor(data_question[, x], levels = categories)
-  count_p_use <- as.numeric(table(data_line, useNA = "no"))
-  return(count_p_use)
+categories <- c("Not relevant", "Slightly relevant", "Important", 
+    "Essential")
+use_counts <- t(sapply(1:ncol(data_question), function(x) {
+    data_line <- factor(data_question[, x], levels = categories)
+    count_p_use <- as.numeric(table(data_line, useNA = "no"))
+    return(count_p_use)
 }))
 use_counts <- data.frame(use_counts)
 colnames(use_counts) <- categories
 rownames(use_counts) <- t(packages_new)
 total_package <- rowSums(use_counts)
-use_counts$package<-row.names(use_counts)
+use_counts$package <- row.names(use_counts)
 use_counts <- use_counts[total_package > 0, ]
 
 df1 <- melt(use_counts, id.vars = "package", variable_name = "response")
@@ -408,21 +745,27 @@ color.pallete <- brewer.pal(5, "YlGnBu")
 color.pallete[1] <- "lightgray"
 df1$package <- factor(df1$package, levels = names(sort(g, decreasing = F)))
 
-df1$response <- factor(df1$response, levels = rev(c("Essential", "Important",
-                                                    "Slightly relevant", "Not relevant")))
+df1$response <- factor(df1$response, levels = rev(c("Essential", 
+    "Important", "Slightly relevant", "Not relevant")))
 
 ggplot(data = df1) +
-  geom_col(aes(x = package, y = value, fill = response)) +
-  coord_flip() + scale_fill_manual(values = color.pallete) +
-  ylab("count")
+    geom_col(aes(x = package, y = value, fill = response)) +
+    coord_flip() +
+    scale_fill_manual(values = color.pallete) +
+    background_grid(major = "x", minor = "x", colour.major = "grey80", 
+        colour.minor = "grey80", size.major = 0.5) +
+    ylab("Count")
 
 ```
 
 ```{r importance-counts}
-df2 <- use_counts[, c("Not relevant", "Slightly relevant", "Important", "Essential")]
-use_per <- df2/apply(df2, 1, sum)*100
-use_per$good_excellent <- signif(apply(use_per[, c("Important", "Essential")], 1, sum), 4)
-use_per$counts <- apply(df2[, c("Important", "Essential")], 1, sum)
+df2 <- use_counts[, c("Not relevant", "Slightly relevant", "Important", 
+    "Essential")]
+use_per <- df2/apply(df2, 1, sum) * 100
+use_per$good_excellent <- signif(apply(use_per[, c("Important", 
+    "Essential")], 1, sum), 4)
+use_per$counts <- apply(df2[, c("Important", "Essential")], 1, 
+    sum)
 
 ```
 
@@ -440,27 +783,31 @@ of their users:
 state-space models to animal tracking data.
 
 ```{r importance-percentage,fig.width = 16, fig.height = 10, fig.cap = "Bar plots of relative frequency of each category of package relevance (for packages with more than 5 users)"}
-package_levels <- row.names(use_per[order(use_per$good_excellent, use_per$Essential, use_per$Important), ])
+package_levels <- row.names(use_per[order(use_per$good_excellent, 
+    use_per$Essential, use_per$Important), ])
 
 use_per2 <- use_per
 use_per2[is.na(use_per2)] <- 0
 use_per2$package <- row.names(use_per2)
 use_per2 <- subset(use_per2, counts > 5)
-df1 <- melt(subset(use_per2, select = -c(good_excellent, counts)), id.vars = "package", variable_name = "response")
+df1 <- melt(subset(use_per2, select = -c(good_excellent, counts)), 
+    id.vars = "package", variable_name = "response")
 df1$package <- factor(df1$package, levels = package_levels)
-df1$response <- factor(df1$response, levels = c("Not relevant", "Slightly relevant", "Important", "Essential"))
+df1$response <- factor(df1$response, levels = c("Not relevant", 
+    "Slightly relevant", "Important", "Essential"))
 color.pallete <- brewer.pal(4, "YlGnBu")
 color.pallete[1:2] <- c("lightgray", "darkgray")
-#color.pallete[1]<-c("lightgray")
+# color.pallete[1]<-c('lightgray')
 
 ggplot(data = df1) +
-  geom_col(aes(x = package, y = value, fill = response)) +
-  coord_flip() + scale_fill_manual(values = color.pallete) +
-  ylab("percentage")
+    geom_col(aes(x = package, y = value, fill = response)) +
+    coord_flip() +
+    scale_fill_manual(values = color.pallete) +
+    ylab("Percentage")
 
 ```
 
-If you want to check the numbers for specific package, the complete
+If you want to check the numbers for specific packages, the complete
 table is below:
 
 ```{r importance-table}
@@ -470,67 +817,6 @@ use_counts[, 1:length(categories)]
 ##   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
 ```
 
-
-## Survey representativity
-
-To get a rough idea of how representative the survey was of the
-population of the package users, we compared the number of
-participants that used each package to the number of monthly downloads
-that each package has.
-
-The number of downloads were calculated using the R package
-`cran.stats`. It calculates the number of independent downloads by
-each package (substracting downloads by dependencies) by day. It only
-provides download statistics for packages on CRAN, downloaded using
-the RStudio CRAN mirror—total downloads are likely to be an order of
-magnitude higher. We computed the average number of downloads per
-month, from September 2017 to August 2018; fewer months were
-considered for packages that were younger than one year old.
-
-There is no perfect match between the number of users and the number
-of downloads per package, but a correlation of 0.85 for the 49
-packages on CRAN provides evidence of an overall good representation
-of the users of tracking packages in the survey. Moreover, most of the
-packages with very few users in the survey regardless of their
-relatively high download statistics were accelerometry packages for
-human patients, which would be revealing that we did not reach that
-subpopulation of users through Twitter and emails.
-
-A log-log plot for both metrics is shown in the figure below.
-
-```{r, fig.width = 16, fig.height = 15}
-data_question <- data_all[, grep("q1", colnames(data_all))]
-colnames(data_question) <- t(packages)
-# I'm dropping trajr that was added in the end and only got 1 response
-data_question <- data_question[, -grep("trajr", colnames(data_question))]
-packages_new <- packages[-which(packages == "trajr"), ]
-categories <- c("Never", "Rarely", "Sometimes", "Often")
-use_counts <- t(sapply(1:ncol(data_question), function(x){
-  data_line <- factor(data_question[, x], levels = categories)
-  count_p_use <- as.numeric(table(data_line))
-  return(count_p_use)
-}))
-use_counts <- data.frame(use_counts)
-colnames(use_counts) <- categories
-rownames(use_counts) <- t(packages_new)
-use_counts$Package <- row.names(use_counts)
-use_counts <- use_counts %>%
-  mutate(users = Rarely + Sometimes + Often)
-
-funciones <- read.csv(paste0(data_dir, "pkg-info.csv"))
-matrix_fun <- left_join(use_counts, funciones)
-matrix_fun <- matrix_fun[(!is.na(matrix_fun$monthly.downloads)), ]
-
-ggplot(matrix_fun, aes(x = users, y = monthly.downloads)) +
-  geom_point(size = 5) +
-  geom_text_repel(label = matrix_fun$Package, segment.size = 0.6,
-                  force = 3, segment.alpha = .5, hjust = 0, box.padding = 0.5,
-                  min.segment.length = .1, size = 6, direction = "both") +
-  scale_x_continuous(trans = "log10") +
-  scale_y_continuous(trans = "log10") +
-  xlab("Number of users") + ylab("Monthly downloads")
-
-```
 
 ## Summary 
 
