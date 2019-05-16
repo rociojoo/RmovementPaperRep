@@ -29,8 +29,6 @@ library("printr")
 ```{r data}
 data_dir <- "data/"
 
-
-
 data <- read.csv(paste0(data_dir, "survey-responses.csv"), stringsAsFactors = FALSE)
 data_all <- data %>% filter(completion == 100)
 packages <- read.csv(paste0(data_dir, "pkg-list-survey.csv"), 
@@ -87,7 +85,7 @@ packages makes it difficult to keep track of the spectrum of choices,
 with an increasing number of available packages every year (this is
 **Figure 2** of the manuscript):
 
-```{r ms-fig-2}
+```{r ms-fig-2, fig.width = 7, fig.height = 5}
 # only keeping columns that we will use
 data_pkg <- pkg_info[, c("Package", "Year")]
 # Loading the names of packages we include in the review
@@ -124,6 +122,7 @@ ggplot(theTable, aes(x = Year, y = Total)) +
         12, 3)) +
     background_grid(major = "y", minor = "none", colour.major = "grey80", 
         size.major = 0.5)
+## ggsave("figures/Fig2.pdf", width = 7, height = 5)
 
 ```
 
@@ -686,8 +685,7 @@ ggplot(matrix_fun_3, aes(x = num_answers, y = Good_Exc, col = documentation)) +
     scale_color_viridis(discrete = TRUE, end = .75, option = "D", direction = -1)+
     background_grid(major = "xy", colour.major = "grey80") +
     theme(legend.position = "none")
-## ggsave("Rating_V_Use1.png", plot = plot1, width = 14, height = 8, 
-##     units = "in")
+## ggsave("figures/Fig3.pdf", width = 14, height = 8)
 
 ```
 
