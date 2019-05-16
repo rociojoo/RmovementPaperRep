@@ -1,9 +1,6 @@
-R tracking package survey
+R Tracking Package Survey
 =========================
 
-
-Introduction
-------------
 
 A survey was elaborated for R package users regarding:
 
@@ -26,7 +23,7 @@ trip, TwGeos/BAStag, TwilightFree, Ukfsst/kfsst, VTrack and
 wildlifeDI. More details on https://mablab.org/post/r-move-survey-1/
 and Joo et al. (pre-print at https://arxiv.org/abs/1901.05935). Two
 packages were missed by the survey (not identified on time) but are in
-the updated version of the manuscript: lsmnsd and segclust2d.
+the updated version of the manuscript: `lsmnsd` and `segclust2d`.
 
 
 Participation in the survey
@@ -74,8 +71,8 @@ participant.
       because of the excellent information in the documentation.
     - Don't remember: I honestly can't remember… 
 * columns starting with "q3" (one column per package) are related to
-the third question: How relevant is each of the packages you've used
-for your work?  Please answer using one of the following options:
+  the third question: How relevant is each of the packages you've used
+  for your work?  Please answer using one of the following options:
     - Not relevant: I tried the package but really didn't find it a
       good use for my work;
     - Slightly relevant: It helps in my work, but not for the core of
@@ -83,7 +80,8 @@ for your work?  Please answer using one of the following options:
     - Important: It's important for the core of my work, but if it
       didn't exist, there are other packages or solutions to obtain
       something similar;
-    - Essential: I wouldn't have done the key part of my work without this package. 
+    - Essential: I wouldn't have done the key part of my work without
+      this package.
 * "q4" corresponds to the answers to the fourth question: What kind of
   R user do you consider yourself? Choose one of the following answers
     - Beginner: You only use existing packages and occasionally write
