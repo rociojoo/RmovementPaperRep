@@ -69,8 +69,7 @@ data about:
    the review, and **72** of those packages were the focus of a survey on
    their users about their use, relevance and quality of their
    documentation (see [packages included in the survey](#packages-included-in-the-survey) 
-   for more details). The information was collected between March and
-   August 2018. Additional details about this data file are available
+   for more details). Additional details about this data file are available
    [here](data/README_pkg-info.md).
 2. [Responses to an anonymous survey](data/survey-responses.csv) about
    the use, relevance and quality of the documentation of 72 packages
