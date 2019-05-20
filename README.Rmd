@@ -51,6 +51,7 @@ data_all <- data_all[-discard_rows, ]
 pkg_info <- read.csv(paste0(data_dir, "pkg-info.csv"), stringsAsFactors = FALSE)
 
 ```
+[![DOI](https://zenodo.org/badge/153035894.svg)](https://zenodo.org/badge/latestdoi/153035894)
 
 ## Overview
 
@@ -77,7 +78,7 @@ data about:
    Additional details about this data file are available
    [here](data/README_survey-responses.md).
 
-
+This repository can be cited using its DOI: 10.5281/zenodo.3066226
 
 ## A large amount of R packages for movement
 

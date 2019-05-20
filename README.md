@@ -16,6 +16,8 @@ May 16, 2019
     -   [Package Relevance](#package-relevance)
 -   [Summary](#summary)
 
+[![DOI](https://zenodo.org/badge/153035894.svg)](https://zenodo.org/badge/latestdoi/153035894)
+
 Overview
 --------
 
@@ -23,6 +25,8 @@ This repository is a companion to the manuscript "*Navigating through the R pack
 
 1.  Information for [74 R packages](data/pkg-info.csv) related to tracking data processing and analysis. Information was collected between March and August 2018. **59** of the packages were described in the review, and **72** of those packages were the focus of a survey on their users about their use, relevance and quality of their documentation (see [packages included in the survey](#packages-included-in-the-survey) for more details). Additional details about this data file are available [here](data/README_pkg-info.md).
 2.  [Responses to an anonymous survey](data/survey-responses.csv) about the use, relevance and quality of the documentation of 72 packages related to movement. The survey was executed in the Fall of 2018. Additional details about this data file are available [here](data/README_survey-responses.md).
+
+This repository can be cited using its DOI: 10.5281/zenodo.3066226
 
 A large amount of R packages for movement
 -----------------------------------------
