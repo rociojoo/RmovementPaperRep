@@ -66,7 +66,7 @@ data about:
 
 1. Information for [74 R packages](data/pkg-info.csv) related to
    tracking data processing and analysis. Information was collected
-   between March and August 2018. **59** of the packages were described in
+   between March and August 2018. **58** of the packages were described in
    the review, and **72** of those packages were the focus of a survey on
    their users about their use, relevance and quality of their
    documentation (see [packages included in the survey](#packages-included-in-the-survey) 
@@ -599,14 +599,14 @@ response for each package.
 To identify some packages with remarkably good documentation, let's
 first only consider those packages with at least 10 responses on the
 quality of documentation (regardless of the "Don't remember"). These
-are 27 (you can see the table of responses below). Among them,
+are 26 (you can see the table of responses below). Among them,
 `momentuHMM` had more than 50% of the responses 
 (`r round(use_per["momentuHMM","Excellent"],2)`%; 
 `r use_counts["momentuHMM","Excellent"]`) as "excellent documentation",
 meaning that the documentation was so good that thanks to it, more
 than half of its users discovered additional features of the package
 and were able to do more analyses than what they initially
-planned. Moreover, 11 packages had more than 75% of the responses as
+planned. Moreover, 10 packages had more than 75% of the responses as
 either "good" or "excellent": 
 `momentuHMM` (`r use_per["momentuHMM","good_excellent"]`%; 
 `r use_per["momentuHMM","counts"]`), 
@@ -614,8 +614,6 @@ either "good" or "excellent":
 `r use_per["moveHMM","counts"]`), 
 `adehabitatLT` (`r use_per["adehabitatLT","good_excellent"]`%; 
 `r use_per["adehabitatLT","counts"]`), 
-`adehabitatHS` (`r use_per["adehabitatHS","good_excellent"]`%; 
-`r use_per["adehabitatHS","counts"]`), 
 `adehabitatHR` (`r use_per["adehabitatHR","good_excellent"]`%; 
 `r use_per["adehabitatHR","counts"]`), 
 `EMbC` (`r use_per["EMbC","good_excellent"]`%; `r use_per["EMbC","counts"]`),
